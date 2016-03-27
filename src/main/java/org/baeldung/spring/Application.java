@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.context.request.RequestContextListener;
 
 @SpringBootApplication
@@ -18,6 +19,10 @@ public class Application extends SpringBootServletInitializer {
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
-        servletContext.addListener(new RequestContextListener());
+    }
+
+    @Bean
+    public RequestContextListener requestContextListener() {
+        return new RequestContextListener();
     }
 }
