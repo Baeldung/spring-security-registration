@@ -75,10 +75,10 @@ public class Privilege {
             return false;
         }
         final Privilege privilege = (Privilege) obj;
-        if (!privilege.equals(privilege.name)) {
-            return false;
+        if (name == null) {
+            return privilege.name == null;
         }
-        return true;
+        return name.equals(privilege.name);
     }
 
     @Override
