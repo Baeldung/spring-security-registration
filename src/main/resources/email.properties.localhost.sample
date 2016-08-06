@@ -1,0 +1,17 @@
+################### JavaMail Configuration ##########################
+# To setup a local smtp server for testing, do the following:
+#
+# Rename this file to email.properties
+# Download FakeSMTP
+# git clone https://github.com/Nilhcem/FakeSMTP
+# cd FakeSMTP
+# mvn compile package
+# Start the fakeSMTP server on port 2525
+# java -jar target/fakeSMTP-*.jar
+
+smtp.host=localhost
+smtp.port=2525
+smtp.protocol=smtp
+smtp.username=test
+smtp.password=test
+support.email=eugen@baeldung.com

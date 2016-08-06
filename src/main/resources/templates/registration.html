@@ -9,6 +9,7 @@ color:#000;
 </style>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script th:src="@{/resources/pwstrength.js}"></script>
+<script th:if="${@captchaService.getReCaptchaSite() != null}" src='https://www.google.com/recaptcha/api.js'></script>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII"/>
 <title th:text="#{label.form.title}">form</title>
 </head>
@@ -45,6 +46,12 @@ color:#000;
                     <label class="col-sm-3" th:text="#{label.user.confirmPass}">confirm</label>
                     <span class="col-sm-5"><input id="matchPassword" class="form-control" name="matchingPassword" value="" type="password" required="required"/></span>
                     <span id="globalError" class="alert alert-danger col-sm-4" style="display:none"></span>
+                </div>
+                <div class="form-group row" th:if="${@captchaService.getReCaptchaSite() != null}">
+                    <!-- to enable captcha uncomment the keys in application.properties -->
+                    <label class="col-sm-3">Captcha</label>
+                    <div class="g-recaptcha col-sm-5" th:attr="data-sitekey=${@captchaService.getReCaptchaSite()}" data-callback="onReCaptchaSuccess" data-expired-callback="onReCaptchaExpired"></div>
+                    <span id="captchaError" class="alert alert-danger col-sm-4" style="display:none"></span>
                 </div>
                 <br/>
                 <button type="submit" class="btn btn-primary" th:text="#{label.form.submit}">submit</button>
@@ -98,6 +105,13 @@ function register(event){
     	$("#globalError").show().html(/*[[#{PasswordMatches.user}]]*/);
     	return;
     }
+    if (typeof grecaptcha !== 'undefined') {
+        var resp = grecaptcha.getResponse();
+        if (resp.length == 0) {
+            $("#captchaError").show().html("Please verify that you are not a robot.");
+            return;
+        }
+    }
     var formData= $('form').serialize();
     $.post(serverContext + "user/registration",formData ,function(data){
         if(data.message == "success"){
@@ -106,9 +120,15 @@ function register(event){
         
     })
     .fail(function(data) {
+        if(typeof grecaptcha !== 'undefined'){
+            grecaptcha.reset();
+        }
         if(data.responseJSON.error.indexOf("MailError") > -1)
         {
             window.location.href = serverContext + "emailError.html";
+        }
+        else if(data.responseJSON.error == "InvalidReCaptcha"){
+            $("#captchaError").show().html(data.responseJSON.message);
         }
         else if(data.responseJSON.error == "UserAlreadyExist"){
             $("#emailError").show().html(data.responseJSON.message);
@@ -128,8 +148,16 @@ function register(event){
         }
     });
 }
-/*]]>*/ 
+/*]]>*/
 
+var onReCaptchaSuccess = function(response) {
+    $("#captchaError").html("").hide();
+};
+
+var onReCaptchaExpired = function(response) {
+    $("#captchaError").html("reCaptcha has expired.  Please solve a new reCaptcha").show();
+    grecaptcha.reset();
+};
 </script>
 </body>
 
