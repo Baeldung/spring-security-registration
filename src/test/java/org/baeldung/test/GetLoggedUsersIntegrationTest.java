@@ -74,7 +74,7 @@ public class GetLoggedUsersIntegrationTest {
     public void givenLoggedInUser_whenGettingLoggedUsersFromActiveUserStore_thenResponseContainsUser() {
         final RequestSpecification request = RestAssured.given().auth().form("test@test.com", "test", formConfig);
 
-        final Map<String, String> params = new HashMap<String, String>();
+        final Map<String, String> params = new HashMap<>();
         params.put("password", "test");
 
         final Response response = request.with().params(params).get(LOGGED_USERS_URL);
@@ -87,7 +87,7 @@ public class GetLoggedUsersIntegrationTest {
     public void givenLoggedInUser_whenGettingLoggedUsersFromSessionRegistry_thenResponseContainsUser() {
         final RequestSpecification request = RestAssured.given().auth().form("test@test.com", "test", formConfig);
 
-        final Map<String, String> params = new HashMap<String, String>();
+        final Map<String, String> params = new HashMap<>();
         params.put("password", "test");
 
         final Response response = request.with().params(params).get(SESSION_REGISTRY_LOGGED_USERS_URL);
