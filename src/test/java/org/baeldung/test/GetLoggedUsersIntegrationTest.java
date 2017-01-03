@@ -16,21 +16,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.authentication.FormAuthConfig;
 import com.jayway.restassured.response.Response;
 import com.jayway.restassured.specification.RequestSpecification;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = { Application.class, TestDbConfig.class, TestIntegrationConfig.class })
-@WebAppConfiguration
-@IntegrationTest(value = "server.port:0")
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = { Application.class, TestDbConfig.class,
+        TestIntegrationConfig.class }, webEnvironment = WebEnvironment.RANDOM_PORT)
 public class GetLoggedUsersIntegrationTest {
 
     @Autowired
@@ -76,7 +74,7 @@ public class GetLoggedUsersIntegrationTest {
     public void givenLoggedInUser_whenGettingLoggedUsersFromActiveUserStore_thenResponseContainsUser() {
         final RequestSpecification request = RestAssured.given().auth().form("test@test.com", "test", formConfig);
 
-        final Map<String, String> params = new HashMap<String, String>();
+        final Map<String, String> params = new HashMap<>();
         params.put("password", "test");
 
         final Response response = request.with().params(params).get(LOGGED_USERS_URL);
@@ -89,7 +87,7 @@ public class GetLoggedUsersIntegrationTest {
     public void givenLoggedInUser_whenGettingLoggedUsersFromSessionRegistry_thenResponseContainsUser() {
         final RequestSpecification request = RestAssured.given().auth().form("test@test.com", "test", formConfig);
 
-        final Map<String, String> params = new HashMap<String, String>();
+        final Map<String, String> params = new HashMap<>();
         params.put("password", "test");
 
         final Response response = request.with().params(params).get(SESSION_REGISTRY_LOGGED_USERS_URL);
