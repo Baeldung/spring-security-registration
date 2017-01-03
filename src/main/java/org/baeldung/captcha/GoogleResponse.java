@@ -24,7 +24,7 @@ public class GoogleResponse {
     static enum ErrorCode {
         MissingSecret, InvalidSecret, MissingResponse, InvalidResponse;
 
-        private static Map<String, ErrorCode> errorsMap = new HashMap<String, ErrorCode>(4);
+        private static Map<String, ErrorCode> errorsMap = new HashMap<>(4);
 
         static {
             errorsMap.put("missing-input-secret", MissingSecret);
