@@ -15,22 +15,6 @@
         <version>1.4.3.RELEASE</version>
     </parent>
     
-    <properties>
-        <java-version>1.8</java-version>
-        
-        <!-- javax jsp -->
-        <javax.servlet.jsp-api.version>2.3.2-b01</javax.servlet.jsp-api.version>
-        <jstl.version>1.2</jstl.version>
-        
-        <!-- guava -->
-        <guava.version>20.0</guava.version>
-
-        <passay.version>1.0</passay.version>
-        <rest-assured.version>2.4.0</rest-assured.version>
-        <commons-dbcp.version>1.4</commons-dbcp.version>
-        
-    </properties>
-
     <dependencies>
     
         <dependency>
@@ -230,5 +214,20 @@
             </build>
         </profile>
     </profiles>
+    
+    <properties>
+        <java-version>1.8</java-version>
+        
+        <!-- javax jsp -->
+        <javax.servlet.jsp-api.version>2.3.2-b01</javax.servlet.jsp-api.version>
+        <jstl.version>1.2</jstl.version>
+
+        <!-- guava -->
+        <guava.version>20.0</guava.version>
+
+        <passay.version>1.0</passay.version>
+        <rest-assured.version>2.4.0</rest-assured.version>
+
+    </properties>
     
 </project>
