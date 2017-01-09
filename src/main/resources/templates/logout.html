@@ -10,7 +10,7 @@
     <div class="container">
         <h1 id="error" class="alert alert-danger" th:if="${session[SPRING_SECURITY_LAST_EXCEPTION]}" th:text="#{message.logoutError}">error</h1>
                 
-        <h1 id="success" class="alert alert-info" th:if="${param.logSucc == true}" th:text="#{message.logoutSucc}"> success</h1>
+        <h1 id="success" class="alert alert-info" th:if="${param.logSucc}" th:text="#{message.logoutSucc}"> success</h1>
         <br/><br/><br/>
         <a class="btn btn-primary" th:href="@{/login}" th:text="#{label.form.loginLink}">login</a>
     </div>

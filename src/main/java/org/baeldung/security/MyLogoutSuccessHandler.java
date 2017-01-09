@@ -16,10 +16,11 @@ public class MyLogoutSuccessHandler implements LogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        HttpSession session = request.getSession();
+        final HttpSession session = request.getSession();
         if (session != null) {
             session.removeAttribute("user");
         }
-    }
 
+        response.sendRedirect("/logout.html?logSucc=true");
+    }
 }
