@@ -2,7 +2,7 @@ package org.baeldung.test;
 
 import org.baeldung.persistence.model.User;
 import org.baeldung.persistence.model.VerificationToken;
-import org.baeldung.spring.Application;
+import org.baeldung.Application;
 import org.baeldung.spring.TestDbConfig;
 import org.baeldung.spring.TestIntegrationConfig;
 import org.junit.Before;
