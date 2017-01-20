@@ -13,7 +13,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,9 +21,6 @@ public class UserSecurityService implements ISecurityUserService {
 
     @Autowired
     private PasswordResetTokenRepository passwordTokenRepository;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
 
     // API
 

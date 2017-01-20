@@ -7,7 +7,6 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.baeldung.captcha.ICaptchaService;
 import org.baeldung.persistence.model.User;
 import org.baeldung.persistence.model.VerificationToken;
 import org.baeldung.registration.OnRegistrationCompleteEvent;
@@ -43,9 +42,6 @@ public class RegistrationController {
 
     @Autowired
     private ISecurityUserService securityUserService;
-
-    @Autowired
-    private ICaptchaService captchaService;
 
     @Autowired
     private MessageSource messages;

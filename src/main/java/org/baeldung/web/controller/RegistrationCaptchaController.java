@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Locale;
-import java.util.UUID;
 
 @Controller
 public class RegistrationCaptchaController {
