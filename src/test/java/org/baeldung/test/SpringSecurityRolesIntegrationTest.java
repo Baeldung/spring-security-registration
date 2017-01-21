@@ -16,14 +16,13 @@ import org.baeldung.spring.TestDbConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = { TestDbConfig.class }, loader = AnnotationConfigContextLoader.class)
+@SpringBootTest(classes = TestDbConfig.class)
 @Transactional
 public class SpringSecurityRolesIntegrationTest {
 

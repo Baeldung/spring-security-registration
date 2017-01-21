@@ -90,6 +90,8 @@ public class GoogleResponse {
             case InvalidResponse:
             case MissingResponse:
                 return true;
+            default:
+                break;
             }
         }
         return false;
