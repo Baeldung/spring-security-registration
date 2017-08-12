@@ -3,10 +3,12 @@ package org.baeldung.security;
 import java.io.IOException;
 import java.util.Collection;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.baeldung.persistence.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +48,12 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
-
+        addWelcomeCookie(gerUserName(authentication), response);
         redirectStrategy.sendRedirect(request, response, targetUrl);
+    }
+
+    private String gerUserName(final Authentication authentication) {
+        return ((User)authentication.getPrincipal()).getFirstName();
     }
 
     protected String determineTargetUrl(final Authentication authentication) {
@@ -70,6 +76,17 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
         } else {
             throw new IllegalStateException();
         }
+    }
+    
+    private void addWelcomeCookie(final String user, final HttpServletResponse response) {
+        Cookie welcomeCookie = getWelcomeCookie(user);
+        response.addCookie(welcomeCookie);
+    }
+
+    private Cookie getWelcomeCookie(final String user) {
+        Cookie welcomeCookie = new Cookie("welcome", user);
+        welcomeCookie.setMaxAge(60 * 60 * 24 * 30); // 30 days
+        return welcomeCookie;
     }
 
     protected void clearAuthenticationAttributes(final HttpServletRequest request) {

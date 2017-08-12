@@ -5,7 +5,7 @@
 <title th:text="#{label.pages.home.title}">Title</title>
 <script th:inline="javascript">
 /*<![CDATA[*/
-    function validate() {
+	function validate() {
         if (document.f.username.value == "" && document.f.password.value == "") {
             alert(/*[[#{message.username} + #{message.password}]]*/);
             document.f.username.focus();
@@ -22,6 +22,21 @@
             return false;
         }
     }
+    
+    function getCookie(name) {
+        return document.cookie.split('; ').reduce((r, v) => {
+          const parts = v.split('=')
+          return parts[0] === name ? decodeURIComponent(parts[1]) : r
+        }, '')
+    }
+    
+    function display_username() {
+        var username = getCookie('welcome');
+        if (username) {
+            document.getElementById("welcometext").innerHTML = "Welcome " + username + "!";
+        }
+    }
+    
 /*]]>*/ 
 </script>
 <style type="text/css">
@@ -29,7 +44,7 @@
 label{padding-left:0 !important}
 </style>
 </head>
-<body>
+<body onload="display_username()">
 <div th:if="${param.message != null}" class="alert alert-info" th:text="${param.message[0]}">message</div>
 
 
@@ -43,7 +58,9 @@ label{padding-left:0 !important}
             <br/><br/>
             
             <form name='f' action="login" method='POST' onsubmit="return validate();">
-                
+                 <span id="welcometext">&nbsp;</span>
+                 
+                 <br /><br />
                  <label class="col-sm-4" th:text="#{label.form.loginEmail}">Email</label>
                  <span class="col-sm-8"><input class="form-control" type='text' name='username' value=''/></span>
                 
