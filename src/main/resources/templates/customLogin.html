@@ -2,7 +2,7 @@
 
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
-<title th:text="#{label.pages.home.title}">Title</title>
+<title>Custom Login</title>
 <script th:inline="javascript">
 /*<![CDATA[*/
 	function validate() {
@@ -23,6 +23,20 @@
         }
     }
     
+    function getCookie(name) {
+        return document.cookie.split('; ').reduce((r, v) => {
+          const parts = v.split('=')
+          return parts[0] === name ? decodeURIComponent(parts[1]) : r
+        }, '')
+    }
+    
+    function display_username() {
+        var username = getCookie('welcome');
+        if (username) {
+            document.getElementById("welcometext").innerHTML = "Welcome " + username + "!";
+        }
+    }
+    
 /*]]>*/ 
 </script>
 <style type="text/css">
@@ -30,7 +44,7 @@
 label{padding-left:0 !important}
 </style>
 </head>
-<body>
+<body onload="display_username()">
 <div th:if="${param.message != null}" class="alert alert-info" th:text="${param.message[0]}">message</div>
 
 
@@ -39,8 +53,6 @@ label{padding-left:0 !important}
     <div class="container">
         <div class="row wrapper">
             <h1 th:text="#{label.form.loginTitle}">Header</h1>
-             <a href="?lang=en" th:text="#{label.form.loginEnglish}">login</a> | 
-             <a href="?lang=es_ES" th:text="#{label.form.loginSpanish}">login</a>
             <br/><br/>
             
             <form name='f' action="login" method='POST' onsubmit="return validate();">
@@ -54,20 +66,11 @@ label{padding-left:0 !important}
                  <label class="col-sm-4" th:text="#{label.form.loginPass}">password</label>
                  <span class="col-sm-8"><input class="form-control" type='password' name='password' /></span>
                 
-                <br/><br/>        
-                 <label class="col-sm-4" th:text="#{label.form.login2fa}">Google Authenticator Verification Code</label>
-                 <span class="col-sm-8"><input class="form-control" type='text' name='code' /></span>
                 
                 <br/><br/>
                  <input class="btn btn-primary" name="submit" type="submit" th:value="#{label.form.submit}" />
  
             </form>
-            <br/> Current Locale :  <span th:text="${#locale}"></span><br/><br/> 
-             <a class="btn btn-default" th:href="@{/registration.html}" th:text="#{label.form.loginSignUp}">signup</a>
-             <br/>
-             <a class="btn btn-default" th:href="@{/registrationCaptcha.html}" th:text="#{label.form.loginSignUpCaptcha}">captcha signup</a>
-             <br/><br/>
-            <a class="btn btn-default" th:href="@{/forgetPassword.html}" th:text="#{message.resetPassword}">reset</a>
         </div>
     </div>
 </body>
