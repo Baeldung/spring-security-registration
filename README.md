@@ -44,3 +44,5 @@ You need to configure the email by renaming file "email.properties.sample" to "e
 You also need to use your own host, you can use Amazon or Google for example.
 You may also setup an email server locally.  See "email.properties.localhost.sample" for more details.
 
+### AuthenticationSuccessHandler configuraion
+If you want to activate the configuration for the article [Custom Login Page for Returning User](http://www.baeldung.com/link-here), then you need to comment the @Component("myAuthenticationSuccessHandler") annotation in the MySimpleUrlAuthenticationSuccessHandler and uncomment the same in MyCustomLoginAuthenticationSuccessHandler.
