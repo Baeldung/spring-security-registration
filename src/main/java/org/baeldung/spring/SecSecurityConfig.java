@@ -34,9 +34,6 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationSuccessHandler myAuthenticationSuccessHandler;
     
     @Autowired
-    private AuthenticationSuccessHandler myCustomLoginAuthenticationSuccessHandler;
-
-    @Autowired
     private LogoutSuccessHandler myLogoutSuccessHandler;
 
     @Autowired
@@ -79,7 +76,6 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/homepage.html")
                 .failureUrl("/login?error=true")
                 .successHandler(myAuthenticationSuccessHandler)
-//                .successHandler(myCustomLoginAuthenticationSuccessHandler)
                 .failureHandler(authenticationFailureHandler)
                 .authenticationDetailsSource(authenticationDetailsSource)
             .permitAll()

@@ -48,12 +48,7 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
-        addWelcomeCookie(gerUserName(authentication), response);
         redirectStrategy.sendRedirect(request, response, targetUrl);
-    }
-
-    private String gerUserName(final Authentication authentication) {
-        return ((User)authentication.getPrincipal()).getFirstName();
     }
 
     protected String determineTargetUrl(final Authentication authentication) {
@@ -78,17 +73,6 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
         }
     }
     
-    private void addWelcomeCookie(final String user, final HttpServletResponse response) {
-        Cookie welcomeCookie = getWelcomeCookie(user);
-        response.addCookie(welcomeCookie);
-    }
-
-    private Cookie getWelcomeCookie(final String user) {
-        Cookie welcomeCookie = new Cookie("welcome", user);
-        welcomeCookie.setMaxAge(60 * 60 * 24 * 30); // 30 days
-        return welcomeCookie;
-    }
-
     protected void clearAuthenticationAttributes(final HttpServletRequest request) {
         final HttpSession session = request.getSession(false);
         if (session == null) {

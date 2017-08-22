@@ -16,7 +16,7 @@ import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-@Component("myCustomLoginAuthenticationSuccessHandler")
+//@Component("myAuthenticationSuccessHandler")
 public class MyCustomLoginAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
