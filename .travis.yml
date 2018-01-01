@@ -14,8 +14,11 @@ addons:
   apt:
     packages:
       - oracle-java8-installer
+      
+script: mvn -q -fae clean install -Pintegration 
 
 cache:
   directories:
   - .autoconf
   - $HOME/.m2
+
