@@ -15,7 +15,7 @@ addons:
     packages:
       - oracle-java8-installer
       
-script: mvn -q -fae clean install -Pintegration 
+script: mvn -B clean install -Pintegration 
 
 cache:
   directories:
