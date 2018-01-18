@@ -24,3 +24,4 @@ target/
 .idea/
 *.iml
 *.iws
+/.apt_generated/
