@@ -1,0 +1,72 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+</head>
+<body>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" th:href="@{/home.html}" th:text="#{label.pages.home.title}">home</a>
+    </div> 
+      <ul class="nav navbar-nav navbar-right">
+        <li><a th:href="@{/logout}" th:text="#{label.pages.logout}">logout</a> </li>
+      </ul>
+    </div>
+</nav>
+
+<div class="container">
+	<div th:if="${param.message != null}" class="alert alert-info" th:text="${param.message[0]}">message</div>
+	
+    <h1>This is the landing page for the admin</h1>
+    
+    <div sec:authorize="hasAuthority('READ_PRIVILEGE')">This text is only visible to a user</div>
+          
+    <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')"> This text is only visible to an admin</div>
+    
+      <a class="btn btn-default" th:href="@{/admin.html}" th:text="#{label.pages.admin}">admin</a>
+      <br/>
+      <a class="btn btn-default" th:href="@{/changePassword.html}" th:text="#{message.changePassword}">change password</a>
+      <br/>
+      <br/>
+      <br/>
+      
+      <div th:if="${#authentication.principal.using2FA}">
+        You are using Two-step authentication <a href="#" class="btn btn-primary" onclick="disable2FA()">Disable 2FA</a> 
+      </div>
+        
+      <div th:if="${! #authentication.principal.using2FA}">
+        You are not using Two-step authentication <a href="#" class="btn btn-primary" onclick="enable2FA()">Enable 2FA</a> 
+      </div>
+      
+      <br/>
+      <div id="qr" style="display:none;">
+          <p>Scan this Barcode using Google Authenticator app on your phone 
+                 <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Android</a> and 
+                 <a href="https://itunes.apple.com/us/app/google-authenticator/id388497605">iPhone</a>
+          </p>
+      </div>
+  </div>
+  
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script type="text/javascript">
+function enable2FA(){
+    set2FA(true);
+}
+
+function disable2FA(){
+    set2FA(false);
+}
+
+function set2FA(use2FA){
+    $.post( "/user/update/2fa", { use2FA: use2FA } , function( data ) {
+        if(use2FA){
+        	$("#qr").append('<img src="'+data.message+'" />').show();
+        }else{
+            window.location.reload();
+        }
+    });
+}
+</script>
+</body>
+
+</html>
