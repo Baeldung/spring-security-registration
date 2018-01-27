@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.junit.Assert.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -21,8 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
 import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { TestDbConfig.class, ServiceConfig.class, TestIntegrationConfig.class })
@@ -45,6 +45,9 @@ public class UserIntegrationTest {
 
     @Before
     public void givenUserAndVerificationToken() throws EmailExistsException {
+        tokenRepository.deleteAll();
+        userRepository.deleteAll();
+
         User user = new User();
         user.setEmail("test@example.com");
         user.setPassword("SecretPassword");
@@ -73,8 +76,8 @@ public class UserIntegrationTest {
 
     @Test
     public void whenContextLoad_thenCorrect() {
-        assertEquals(1, userRepository.count());
-        assertEquals(1, tokenRepository.count());
+        assertThat(userRepository.count()).isEqualTo(1);
+        assertThat(tokenRepository.count()).isEqualTo(1);
     }
 
     // @Test(expected = Exception.class)
