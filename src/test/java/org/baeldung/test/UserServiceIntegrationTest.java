@@ -27,6 +27,7 @@ import org.baeldung.validation.EmailExistsException;
 import org.baeldung.web.dto.UserDto;
 import org.baeldung.web.error.UserAlreadyExistException;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,13 @@ public class UserServiceIntegrationTest {
 
     @Autowired
     private VerificationTokenRepository tokenRepository;
+
+    @Before
+    public void setUp() {
+        tokenRepository.deleteAll();
+        userRepository.deleteAll();
+        roleRepository.deleteAll();
+    }
 
     //
 
