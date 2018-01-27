@@ -1,5 +1,6 @@
 package org.baeldung.test;
 
+import org.baeldung.common.DatabaseCleaner;
 import org.baeldung.persistence.dao.UserRepository;
 import org.baeldung.persistence.dao.VerificationTokenRepository;
 import org.baeldung.persistence.model.User;
@@ -35,6 +36,9 @@ public class UserIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -45,8 +49,7 @@ public class UserIntegrationTest {
 
     @Before
     public void givenUserAndVerificationToken() throws EmailExistsException {
-        tokenRepository.deleteAll();
-        userRepository.deleteAll();
+        databaseCleaner.clean();
 
         User user = new User();
         user.setEmail("test@example.com");

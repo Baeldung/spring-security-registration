@@ -11,6 +11,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.UUID;
 
+import org.baeldung.common.DatabaseCleaner;
 import org.baeldung.persistence.dao.RoleRepository;
 import org.baeldung.persistence.dao.UserRepository;
 import org.baeldung.persistence.dao.VerificationTokenRepository;
@@ -52,14 +53,15 @@ public class UserServiceIntegrationTest {
     @Autowired
     private VerificationTokenRepository tokenRepository;
 
-    @Before
-    public void setUp() {
-        tokenRepository.deleteAll();
-        userRepository.deleteAll();
-        roleRepository.deleteAll();
-    }
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
 
     //
+
+    @Before
+    public void setUp() {
+        databaseCleaner.clean();
+    }
 
     @Test
     public void givenNewUser_whenRegistered_thenCorrect() throws EmailExistsException {

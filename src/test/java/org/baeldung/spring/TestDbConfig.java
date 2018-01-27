@@ -1,5 +1,6 @@
 package org.baeldung.spring;
 
+import org.baeldung.common.DatabaseCleaner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +22,11 @@ public class TestDbConfig extends PersistenceJPAConfig {
     @Bean
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder(11);
+    }
+
+    @Bean
+    public DatabaseCleaner dbCleaner() {
+        return new DatabaseCleaner();
     }
 
     @Override
