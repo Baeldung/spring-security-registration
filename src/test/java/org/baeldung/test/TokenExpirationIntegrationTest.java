@@ -50,6 +50,8 @@ public class TokenExpirationIntegrationTest {
 
     @Before
     public void givenUserWithExpiredToken() {
+        tokenRepository.deleteAll();
+
         User user = new User();
         user.setEmail(UUID.randomUUID().toString() + "@example.com");
         user.setPassword(UUID.randomUUID().toString());
