@@ -5,7 +5,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ // @formatter:off 
-    ChangePasswordIntegrationTest.class, 
+    AuthenticationSuccessRedirectIntegrationTest.class,
+    ChangePasswordIntegrationTest.class,
     TokenExpirationIntegrationTest.class,
     RegistrationControllerIntegrationTest.class,
     GetLoggedUsersIntegrationTest.class,
