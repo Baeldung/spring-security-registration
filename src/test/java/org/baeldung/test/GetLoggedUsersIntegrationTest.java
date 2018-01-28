@@ -1,13 +1,12 @@
 package org.baeldung.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.HashMap;
-import java.util.Map;
-
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.authentication.FormAuthConfig;
+import com.jayway.restassured.response.Response;
+import com.jayway.restassured.specification.RequestSpecification;
 import org.baeldung.Application;
-import org.baeldung.persistence.dao.UserRepository;
+import org.baeldung.common.DatabaseCleaner;
+import org.baeldung.common.EntityBootstrap;
 import org.baeldung.persistence.model.User;
 import org.baeldung.spring.TestDbConfig;
 import org.baeldung.spring.TestIntegrationConfig;
@@ -18,80 +17,77 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.authentication.FormAuthConfig;
-import com.jayway.restassured.response.Response;
-import com.jayway.restassured.specification.RequestSpecification;
+import java.net.URI;
+
+import static java.util.Collections.singletonMap;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { Application.class, TestDbConfig.class, TestIntegrationConfig.class }, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {Application.class, TestDbConfig.class, TestIntegrationConfig.class}, webEnvironment = WebEnvironment.RANDOM_PORT)
 public class GetLoggedUsersIntegrationTest {
 
-    @Autowired
-    private UserRepository userRepository;
+    private static final String BASE_ADDRESS = "http://localhost";
+    private static final String LOGIN_PATH = "/login";
+    private static final String LOGGED_USERS_PATH = "/loggedUsers";
+    private static final String SESSION_REGISTRY_LOGGED_USERS_PATH = "/loggedUsersFromSessionRegistry";
+    private static final String USER_PASSWORD = "test";
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private DatabaseCleaner databaseCleaner;
+
+    @Autowired
+    private EntityBootstrap entityBootstrap;
 
     @Value("${local.server.port}")
-    int port;
+    private int port;
+
+    private URI baseUrl;
 
     private FormAuthConfig formConfig;
-    private String LOGGED_USERS_URL, SESSION_REGISTRY_LOGGED_USERS_URL;
+
+    private User user;
 
     //
 
     @Before
     public void init() {
-        User user = userRepository.findByEmail("test@test.com");
-        if (user == null) {
-            user = new User();
-            user.setFirstName("Test");
-            user.setLastName("Test");
-            user.setPassword(passwordEncoder.encode("test"));
-            user.setEmail("test@test.com");
-            user.setEnabled(true);
-            userRepository.save(user);
-        } else {
-            user.setPassword(passwordEncoder.encode("test"));
-            userRepository.save(user);
-        }
+        databaseCleaner.clean();
+
+        user = entityBootstrap.newUser()
+                .withPassword(USER_PASSWORD)
+                .withRoles("ROLE_ADMIN")
+                .withEnabled(true)
+                .save();
 
         RestAssured.port = port;
-
-        String URL_PREFIX = "http://localhost:" + String.valueOf(port);
-        LOGGED_USERS_URL = URL_PREFIX + "/loggedUsers";
-        SESSION_REGISTRY_LOGGED_USERS_URL = URL_PREFIX + "/loggedUsersFromSessionRegistry";
-        formConfig = new FormAuthConfig(URL_PREFIX + "/login", "username", "password");
+        baseUrl = UriComponentsBuilder.fromHttpUrl(BASE_ADDRESS).port(port).build().toUri();
+        String loginUrl = baseUrl.resolve(LOGIN_PATH).toString();
+        formConfig = new FormAuthConfig(loginUrl, "username", "password");
     }
 
     @Test
     public void givenLoggedInUser_whenGettingLoggedUsersFromActiveUserStore_thenResponseContainsUser() {
-        final RequestSpecification request = RestAssured.given().auth().form("test@test.com", "test", formConfig);
+        URI loggedUsersUrl = baseUrl.resolve(LOGGED_USERS_PATH);
+        final RequestSpecification request = RestAssured.given().auth().form(user.getEmail(), USER_PASSWORD, formConfig);
 
-        final Map<String, String> params = new HashMap<String, String>();
-        params.put("password", "test");
+        final Response response = request.with().params(singletonMap("password", USER_PASSWORD)).get(loggedUsersUrl);
 
-        final Response response = request.with().params(params).get(LOGGED_USERS_URL);
-
-        assertEquals(200, response.statusCode());
-        assertTrue(response.body().asString().contains("test@test.com"));
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.body().asString()).contains(user.getEmail());
     }
 
     @Test
     public void givenLoggedInUser_whenGettingLoggedUsersFromSessionRegistry_thenResponseContainsUser() {
-        final RequestSpecification request = RestAssured.given().auth().form("test@test.com", "test", formConfig);
+        URI sessionRegistryLoggedUsersUrl = baseUrl.resolve(SESSION_REGISTRY_LOGGED_USERS_PATH);
+        final RequestSpecification request = RestAssured.given().auth().form(user.getEmail(), USER_PASSWORD, formConfig);
 
-        final Map<String, String> params = new HashMap<String, String>();
-        params.put("password", "test");
+        final Response response = request.with().params(singletonMap("password", USER_PASSWORD)).get(sessionRegistryLoggedUsersUrl);
 
-        final Response response = request.with().params(params).get(SESSION_REGISTRY_LOGGED_USERS_URL);
-
-        assertEquals(200, response.statusCode());
-        assertTrue(response.body().asString().contains("test@test.com"));
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.body().asString()).contains(user.getEmail());
     }
 
 }

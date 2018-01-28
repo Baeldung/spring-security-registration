@@ -1,5 +1,7 @@
 package org.baeldung.test;
 
+import org.baeldung.common.DatabaseCleaner;
+import org.baeldung.common.EntityBootstrap;
 import org.baeldung.persistence.dao.UserRepository;
 import org.baeldung.persistence.dao.VerificationTokenRepository;
 import org.baeldung.persistence.model.User;
@@ -7,7 +9,6 @@ import org.baeldung.persistence.model.VerificationToken;
 import org.baeldung.spring.TestDbConfig;
 import org.baeldung.spring.TestTaskConfig;
 import org.baeldung.task.TokensPurgeTask;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,19 +17,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-
 import java.util.Date;
-import java.util.UUID;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { TestDbConfig.class, TestTaskConfig.class })
-@Transactional
+@SpringBootTest(classes = {TestDbConfig.class, TestTaskConfig.class})
 public class TokenExpirationIntegrationTest {
 
     @Autowired
@@ -40,8 +36,11 @@ public class TokenExpirationIntegrationTest {
     @Autowired
     private TokensPurgeTask tokensPurgeTask;
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    @Autowired
+    private EntityBootstrap entityBootstrap;
 
     private Long token_id;
     private Long user_id;
@@ -50,35 +49,19 @@ public class TokenExpirationIntegrationTest {
 
     @Before
     public void givenUserWithExpiredToken() {
-        User user = new User();
-        user.setEmail(UUID.randomUUID().toString() + "@example.com");
-        user.setPassword(UUID.randomUUID().toString());
-        user.setFirstName("First");
-        user.setLastName("Last");
+        databaseCleaner.clean();
 
-        entityManager.persist(user);
-        String token = UUID.randomUUID().toString();
-        VerificationToken verificationToken = new VerificationToken(token, user);
-        verificationToken.setExpiryDate(Date.from(Instant.now().minus(2, ChronoUnit.DAYS)));
-
-        entityManager.persist(verificationToken);
-
-        /*
-            flush managed entities to the database to populate identifier field
-         */
-        entityManager.flush();
-
-        /*
-            remove managed entities from the persistence context
-            so that subsequent SQL queries hit the database
-         */
-        entityManager.clear();
+        User user = entityBootstrap.newUser().save();
+        VerificationToken verificationToken = entityBootstrap.newVerificationToken(user)
+                .withExpiryDate(Date.from(Instant.now().minus(2, ChronoUnit.DAYS)))
+                .save();
 
         token_id = verificationToken.getId();
         user_id = user.getId();
     }
 
     @Test
+    @Transactional
     public void whenContextLoad_thenCorrect() {
         assertNotNull(user_id);
         assertNotNull(token_id);
@@ -90,18 +73,15 @@ public class TokenExpirationIntegrationTest {
         assertTrue(tokenRepository.findAllByExpiryDateLessThan(Date.from(Instant.now())).anyMatch((token) -> token.equals(verificationToken)));
     }
 
-    @After
-    public void flushAfter() {
-        entityManager.flush();
-    }
-
     @Test
+    @Transactional
     public void whenRemoveByGeneratedQuery_thenCorrect() {
         tokenRepository.deleteByExpiryDateLessThan(Date.from(Instant.now()));
         assertEquals(0, tokenRepository.count());
     }
 
     @Test
+    @Transactional
     public void whenRemoveByJPQLQuery_thenCorrect() {
         tokenRepository.deleteAllExpiredSince(Date.from(Instant.now()));
         assertEquals(0, tokenRepository.count());
