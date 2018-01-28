@@ -1,11 +1,7 @@
 package org.baeldung.test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
+import org.baeldung.common.DatabaseCleaner;
+import org.baeldung.common.EntityBootstrap;
 import org.baeldung.persistence.dao.PrivilegeRepository;
 import org.baeldung.persistence.dao.RoleRepository;
 import org.baeldung.persistence.dao.UserRepository;
@@ -17,14 +13,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestDbConfig.class)
 @Transactional
 public class SpringSecurityRolesIntegrationTest {
+
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
+
+    @Autowired
+    private EntityBootstrap entityBootstrap;
 
     @Autowired
     private UserRepository userRepository;
@@ -35,85 +40,67 @@ public class SpringSecurityRolesIntegrationTest {
     @Autowired
     private PrivilegeRepository privilegeRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    private User user;
-    private Role role;
-    private Privilege privilege;
-
     // tests
 
     @Test
     public void testDeleteUser() {
-        role = new Role("TEST_ROLE");
-        roleRepository.save(role);
+        databaseCleaner.clean();
 
-        user = new User();
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setPassword(passwordEncoder.encode("123"));
-        user.setEmail("john@doe.com");
-        user.setRoles(Arrays.asList(role));
-        user.setEnabled(true);
-        userRepository.save(user);
+        Role role = entityBootstrap.newRole().withName("TEST_ROLE").save();
+        User user = entityBootstrap.newUser()
+                .withEmail("john@doe.com")
+                .withPassword("123")
+                .withRoles(role)
+                .withEnabled(true)
+                .save();
 
-        assertNotNull(userRepository.findByEmail(user.getEmail()));
-        assertNotNull(roleRepository.findByName(role.getName()));
+        assertThat(userRepository.findByEmail(user.getEmail())).isNotNull();
+        assertThat(roleRepository.findByName(role.getName())).isNotNull();
+
         user.setRoles(null);
         userRepository.delete(user);
 
-        assertNull(userRepository.findByEmail(user.getEmail()));
-        assertNotNull(roleRepository.findByName(role.getName()));
+        assertThat(userRepository.findByEmail(user.getEmail())).isNull();
+        assertThat(roleRepository.findByName(role.getName())).isNotNull();
     }
 
     @Test
     public void testDeleteRole() {
-        privilege = new Privilege("TEST_PRIVILEGE");
-        privilegeRepository.save(privilege);
+        Privilege privilege = entityBootstrap.newPrivilege().withName("TEST_PRIVILEGE").save();
+        Role role = entityBootstrap.newRole().withName("TEST_ROLE").withPrivileges(privilege).save();
+        User user = entityBootstrap.newUser()
+                .withEmail("john@doe.com")
+                .withPassword("123")
+                .withRoles(role)
+                .withEnabled(true)
+                .save();
 
-        role = new Role("TEST_ROLE");
-        role.setPrivileges(Arrays.asList(privilege));
-        roleRepository.save(role);
+        assertThat(userRepository.findByEmail(user.getEmail())).isNotNull();
+        assertThat(roleRepository.findByName(role.getName())).isNotNull();
+        assertThat(privilegeRepository.findByName(privilege.getName())).isNotNull();
 
-        user = new User();
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setPassword(passwordEncoder.encode("123"));
-        user.setEmail("john@doe.com");
-        user.setRoles(Arrays.asList(role));
-        user.setEnabled(true);
-        userRepository.save(user);
-
-        assertNotNull(privilegeRepository.findByName(privilege.getName()));
-        assertNotNull(userRepository.findByEmail(user.getEmail()));
-        assertNotNull(roleRepository.findByName(role.getName()));
-
-        user.setRoles(new ArrayList<Role>());
-        role.setPrivileges(new ArrayList<Privilege>());
+        user.setRoles(new ArrayList<>());
+        role.setPrivileges(new ArrayList<>());
         roleRepository.delete(role);
 
-        assertNull(roleRepository.findByName(role.getName()));
-        assertNotNull(privilegeRepository.findByName(privilege.getName()));
-        assertNotNull(userRepository.findByEmail(user.getEmail()));
+        assertThat(userRepository.findByEmail(user.getEmail())).isNotNull();
+        assertThat(roleRepository.findByName(role.getName())).isNull();
+        assertThat(privilegeRepository.findByName(privilege.getName())).isNotNull();
     }
 
     @Test
     public void testDeletePrivilege() {
-        privilege = new Privilege("TEST_PRIVILEGE");
-        privilegeRepository.save(privilege);
+        Privilege privilege = entityBootstrap.newPrivilege().withName("TEST_PRIVILEGE").save();
+        Role role = entityBootstrap.newRole().withName("TEST_ROLE").withPrivileges(privilege).save();
 
-        role = new Role("TEST_ROLE");
-        role.setPrivileges(Arrays.asList(privilege));
-        roleRepository.save(role);
+        assertThat(roleRepository.findByName(role.getName())).isNotNull();
+        assertThat(privilegeRepository.findByName(privilege.getName())).isNotNull();
 
-        assertNotNull(roleRepository.findByName(role.getName()));
-        assertNotNull(privilegeRepository.findByName(privilege.getName()));
-
-        role.setPrivileges(new ArrayList<Privilege>());
+        role.setPrivileges(new ArrayList<>());
         privilegeRepository.delete(privilege);
 
-        assertNull(privilegeRepository.findByName(privilege.getName()));
-        assertNotNull(roleRepository.findByName(role.getName()));
+        assertThat(roleRepository.findByName(role.getName())).isNotNull();
+        assertThat(privilegeRepository.findByName(privilege.getName())).isNull();
     }
+
 }

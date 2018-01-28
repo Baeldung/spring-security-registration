@@ -1,20 +1,14 @@
 package org.baeldung.test;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.isEmptyOrNullString;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import java.util.HashMap;
-import java.util.Map;
-
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.authentication.FormAuthConfig;
+import com.jayway.restassured.response.Response;
+import com.jayway.restassured.specification.RequestSpecification;
 import org.baeldung.Application;
-import org.baeldung.persistence.dao.UserRepository;
-import org.baeldung.persistence.model.User;
+import org.baeldung.common.DatabaseCleaner;
+import org.baeldung.common.EntityBootstrap;
 import org.baeldung.spring.TestDbConfig;
 import org.baeldung.spring.TestIntegrationConfig;
-import org.hamcrest.core.IsNot;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,107 +16,122 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.authentication.FormAuthConfig;
-import com.jayway.restassured.response.Response;
-import com.jayway.restassured.specification.RequestSpecification;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.containsString;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { Application.class, TestDbConfig.class, TestIntegrationConfig.class }, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {Application.class, TestDbConfig.class, TestIntegrationConfig.class}, webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ChangePasswordIntegrationTest {
 
-    @Autowired
-    private UserRepository userRepository;
+    private static final String BASE_ADDRESS = "http://localhost";
+    private static final String LOGIN_PATH = "/login";
+    private static final String UPDATE_PASSWORD_PATH = "/user/updatePassword";
+
+    private static final String USER_EMAIL = "test@test.com";
+    private static final String USER_PASSWORD = "test";
+    private static final String CONSOLE_ENDPOINT = "/console.html";
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private DatabaseCleaner databaseCleaner;
+
+    @Autowired
+    private EntityBootstrap entityBootstrap;
 
     @Value("${local.server.port}")
     int port;
 
+    private URI updatePasswordUrl;
+
     private FormAuthConfig formConfig;
-    private String URL;
 
     //
 
     @Before
     public void init() {
-        User user = userRepository.findByEmail("test@test.com");
-        if (user == null) {
-            user = new User();
-            user.setFirstName("Test");
-            user.setLastName("Test");
-            user.setPassword(passwordEncoder.encode("test"));
-            user.setEmail("test@test.com");
-            user.setEnabled(true);
-            userRepository.save(user);
-        } else {
-            user.setPassword(passwordEncoder.encode("test"));
-            userRepository.save(user);
-        }
+        databaseCleaner.clean();
+
+        entityBootstrap.newUser()
+                .withEmail(USER_EMAIL)
+                .withPassword(USER_PASSWORD)
+                .withEnabled(true)
+                .withRoles("ROLE_ADMIN")
+                .save();
 
         RestAssured.port = port;
 
-        final String URL_PREFIX = "http://localhost:" + String.valueOf(port);
-        URL = URL_PREFIX + "/user/updatePassword";
-        formConfig = new FormAuthConfig(URL_PREFIX + "/login", "username", "password");
+        URI baseUrl = UriComponentsBuilder.fromHttpUrl(BASE_ADDRESS).port(port).build().toUri();
+        String loginUrl = baseUrl.resolve(LOGIN_PATH).toString();
+        updatePasswordUrl = baseUrl.resolve(UPDATE_PASSWORD_PATH);
+        formConfig = new FormAuthConfig(loginUrl, "username", "password");
     }
 
     @Test
     public void givenNotAuthenticatedUser_whenLoggingIn_thenCorrect() {
-        final RequestSpecification request = RestAssured.given().auth().form("test@test.com", "test", formConfig);
+        final RequestSpecification request = RestAssured.given().auth().form(USER_EMAIL, USER_PASSWORD, formConfig);
 
-        request.when().get("/console.html").then().assertThat().statusCode(200).and().body(containsString("home"));
+        Response response = request.when().get(CONSOLE_ENDPOINT);
+
+        assertThat(response.getStatusCode()).isEqualTo(200);
+
+        response.then().assertThat().statusCode(200)
+                .body(containsString("home"));
     }
 
     @Test
     public void givenNotAuthenticatedUser_whenBadPasswordLoggingIn_thenCorrect() {
         final RequestSpecification request = RestAssured.given().auth().form("XXXXXXXX@XXXXXXXXX.com", "XXXXXXXX", formConfig).redirects().follow(false);
 
-        request.when().get("/console.html").then().statusCode(IsNot.not(200)).body(isEmptyOrNullString());
+        Response response = request.when().get(CONSOLE_ENDPOINT);
+
+        assertThat(response.getStatusCode()).isNotEqualTo(200);
+        assertThat(response.body().asString()).isNullOrEmpty();
     }
 
     @Test
     public void givenLoggedInUser_whenChangingPassword_thenCorrect() {
-        final RequestSpecification request = RestAssured.given().auth().form("test@test.com", "test", formConfig);
+        final RequestSpecification request = RestAssured.given().auth().form(USER_EMAIL, USER_PASSWORD, formConfig);
 
-        final Map<String, String> params = new HashMap<String, String>();
-        params.put("oldPassword", "test");
+        final Map<String, String> params = new HashMap<>();
+        params.put("oldPassword", USER_PASSWORD);
         params.put("newPassword", "newTest&12");
 
-        final Response response = request.with().queryParameters(params).post(URL);
+        final Response response = request.with().queryParameters(params).post(updatePasswordUrl);
 
-        assertEquals(200, response.statusCode());
-        assertTrue(response.body().asString().contains("Password updated successfully"));
+        assertThat(response.statusCode()).isEqualTo(200);
+        assertThat(response.body().asString()).contains("Password updated successfully");
     }
 
     @Test
     public void givenWrongOldPassword_whenChangingPassword_thenBadRequest() {
-        final RequestSpecification request = RestAssured.given().auth().form("test@test.com", "test", formConfig);
+        final RequestSpecification request = RestAssured.given().auth().form(USER_EMAIL, USER_PASSWORD, formConfig);
 
-        final Map<String, String> params = new HashMap<String, String>();
+        final Map<String, String> params = new HashMap<>();
         params.put("oldPassword", "abc");
         params.put("newPassword", "newTest&12");
 
-        final Response response = request.with().queryParameters(params).post(URL);
+        final Response response = request.with().queryParameters(params).post(updatePasswordUrl);
 
-        assertEquals(400, response.statusCode());
-        assertTrue(response.body().asString().contains("Invalid Old Password"));
+        assertThat(response.statusCode()).isEqualTo(400);
+        assertThat(response.body().asString()).contains("Invalid Old Password");
     }
 
     @Test
     public void givenNotAuthenticatedUser_whenChangingPassword_thenRedirect() {
-        final Map<String, String> params = new HashMap<String, String>();
+        final Map<String, String> params = new HashMap<>();
         params.put("oldPassword", "abc");
         params.put("newPassword", "xyz");
 
-        final Response response = RestAssured.with().params(params).post(URL);
+        final Response response = RestAssured.with().params(params).post(updatePasswordUrl);
 
-        assertEquals(302, response.statusCode());
-        assertFalse(response.body().asString().contains("Password updated successfully"));
+        assertThat(response.statusCode()).isEqualTo(302);
+        assertThat(response.body().asString()).doesNotContain("Password updated successfully");
     }
 
 }

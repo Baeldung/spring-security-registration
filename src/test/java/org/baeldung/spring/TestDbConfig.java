@@ -1,6 +1,7 @@
 package org.baeldung.spring;
 
 import org.baeldung.common.DatabaseCleaner;
+import org.baeldung.common.EntityBootstrap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,11 @@ public class TestDbConfig extends PersistenceJPAConfig {
     @Bean
     public DatabaseCleaner dbCleaner() {
         return new DatabaseCleaner();
+    }
+
+    @Bean
+    public EntityBootstrap entityBootstrap() {
+        return new EntityBootstrap();
     }
 
     @Override

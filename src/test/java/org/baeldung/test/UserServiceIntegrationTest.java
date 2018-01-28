@@ -1,16 +1,5 @@
 package org.baeldung.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.UUID;
-
 import org.baeldung.common.DatabaseCleaner;
 import org.baeldung.persistence.dao.RoleRepository;
 import org.baeldung.persistence.dao.UserRepository;
@@ -37,8 +26,15 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.UUID;
+
+import static org.junit.Assert.*;
+
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { TestDbConfig.class, ServiceConfig.class, TestIntegrationConfig.class })
+@SpringBootTest(classes = {TestDbConfig.class, ServiceConfig.class, TestIntegrationConfig.class})
 public class UserServiceIntegrationTest {
 
     @Autowired
@@ -77,6 +73,7 @@ public class UserServiceIntegrationTest {
     }
 
     @Test
+    @Transactional
     public void givenDetachedUser_whenAccessingEntityAssociations_thenCorrect() throws EmailExistsException {
         final User user = registerUser();
         assertNotNull(user.getRoles());
