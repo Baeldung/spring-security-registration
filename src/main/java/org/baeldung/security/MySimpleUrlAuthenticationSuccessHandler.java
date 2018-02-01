@@ -43,6 +43,7 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
 
     protected void handle(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) throws IOException {
         final String targetUrl = determineTargetUrl(authentication);
+        logger.error("Target URL is : " + targetUrl);
 
         if (response.isCommitted()) {
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
@@ -54,6 +55,7 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
     protected String determineTargetUrl(final Authentication authentication) {
         boolean isUser = false;
         boolean isAdmin = false;
+        boolean isManager = false;
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (final GrantedAuthority grantedAuthority : authorities) {
             if (grantedAuthority.getAuthority().equals("READ_PRIVILEGE")) {
@@ -62,10 +64,16 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
                 isAdmin = true;
                 isUser = false;
                 break;
+            } else if (grantedAuthority.getAuthority().equals("MANAGER_PRIVILEGE")){
+            	isManager = true;
+            	isAdmin = false;
+            	isUser = false;
             }
         }
         if (isUser) {
             return "/homepage.html?user=" + authentication.getName();
+        } else if (isManager) {
+            return "/managementConsole.html";
         } else if (isAdmin) {
             return "/console.html";
         } else {
