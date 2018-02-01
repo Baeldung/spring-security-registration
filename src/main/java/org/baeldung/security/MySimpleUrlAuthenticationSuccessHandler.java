@@ -1,19 +1,19 @@
 package org.baeldung.security;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.stream.Collectors;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.baeldung.persistence.dao.UserRepository;
+import org.baeldung.persistence.model.Role;
 import org.baeldung.persistence.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
@@ -29,6 +29,8 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
     @Autowired
     ActiveUserStore activeUserStore;
 
+    @Autowired
+    UserRepository userRepository;
     @Override
     public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) throws IOException {
         handle(request, response, authentication);
@@ -52,25 +54,22 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
     }
 
     protected String determineTargetUrl(final Authentication authentication) {
-        boolean isUser = false;
-        boolean isAdmin = false;
-        final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        for (final GrantedAuthority grantedAuthority : authorities) {
-            if (grantedAuthority.getAuthority().equals("READ_PRIVILEGE")) {
-                isUser = true;
-            } else if (grantedAuthority.getAuthority().equals("WRITE_PRIVILEGE")) {
-                isAdmin = true;
-                isUser = false;
-                break;
+        User userDetails = (User) authentication.getPrincipal();
+        
+        User user = userRepository.findByEmail(userDetails.getEmail());
+        if(!user.getRoles().isEmpty()){
+        	Role role = user.getRoles().stream().collect(Collectors.toList()).get(0);
+        	if(role.getName().equals("ROLE_MANAGER")){
+        		 return "/management.html";
+        	}else if (role.getName().equals("ROLE_ADMIN")) {
+                return "/console.html";
+            }else if (role.getName().equals("ROLE_USER")) {
+            return "/homepage.html?user=" + authentication.getName();
+        } else {
+            	throw new IllegalStateException();
             }
         }
-        if (isUser) {
-            return "/homepage.html?user=" + authentication.getName();
-        } else if (isAdmin) {
-            return "/console.html";
-        } else {
-            throw new IllegalStateException();
-        }
+        return null;
     }
     
     protected void clearAuthenticationAttributes(final HttpServletRequest request) {
