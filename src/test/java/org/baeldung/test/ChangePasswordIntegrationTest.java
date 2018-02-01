@@ -64,6 +64,19 @@ public class ChangePasswordIntegrationTest {
             userRepository.save(user);
         }
 
+        user = userRepository.findByEmail("manager@test.com");
+        if(user == null){
+        	user = new User();
+            user.setFirstName("manager");
+            user.setLastName("manager");
+            user.setPassword(passwordEncoder.encode("manager"));
+            user.setEmail("manager@test.com");
+            user.setEnabled(true);
+            userRepository.save(user);
+        }else {
+            user.setPassword(passwordEncoder.encode("manager"));
+            userRepository.save(user);
+        }
         RestAssured.port = port;
 
         final String URL_PREFIX = "http://localhost:" + String.valueOf(port);
@@ -76,6 +89,8 @@ public class ChangePasswordIntegrationTest {
         final RequestSpecification request = RestAssured.given().auth().form("test@test.com", "test", formConfig);
 
         request.when().get("/console.html").then().assertThat().statusCode(200).and().body(containsString("home"));
+        final RequestSpecification requestForManagerLogin = RestAssured.given().auth().form("manager@test.com", "manager", formConfig);
+        requestForManagerLogin.when().get("/management.html").then().assertThat().statusCode(200).and().body(containsString("home"));
     }
 
     @Test
@@ -83,6 +98,8 @@ public class ChangePasswordIntegrationTest {
         final RequestSpecification request = RestAssured.given().auth().form("XXXXXXXX@XXXXXXXXX.com", "XXXXXXXX", formConfig).redirects().follow(false);
 
         request.when().get("/console.html").then().statusCode(IsNot.not(200)).body(isEmptyOrNullString());
+        final RequestSpecification requestForManagerLogin = RestAssured.given().auth().form("XXXXXXXX@XXXXXXXXX.com", "XXXXXXXX", formConfig).redirects().follow(false);
+        requestForManagerLogin.when().get("/management.html").then().statusCode(IsNot.not(200)).body(isEmptyOrNullString());
     }
 
     @Test
@@ -98,10 +115,30 @@ public class ChangePasswordIntegrationTest {
         assertEquals(200, response.statusCode());
         assertTrue(response.body().asString().contains("Password updated successfully"));
     }
+    @Test
+    public void givenManagerLoggedInUser_whenChangingPassword_thenCorrect() {
+        final RequestSpecification request = RestAssured.given().auth().form("manager@test.com", "manager", formConfig);
 
+        final Map<String, String> params = new HashMap<String, String>();
+        params.put("oldPassword", "manager");
+        params.put("newPassword", "newTest&12");
+        final Response response = request.with().queryParameters(params).post(URL);
+        assertEquals(200, response.statusCode());
+        assertTrue(response.body().asString().contains("Password updated successfully"));
+    }
     @Test
     public void givenWrongOldPassword_whenChangingPassword_thenBadRequest() {
         final RequestSpecification request = RestAssured.given().auth().form("test@test.com", "test", formConfig);
+        final Map<String, String> params = new HashMap<String, String>();
+        params.put("oldPassword", "abc");
+        params.put("newPassword", "newTest&12");
+        final Response response = request.with().queryParameters(params).post(URL);
+        assertEquals(400, response.statusCode());
+        assertTrue(response.body().asString().contains("Invalid Old Password"));
+    }
+    @Test
+    public void givenManagerWrongOldPassword_whenChangingPassword_thenBadRequest() {
+        final RequestSpecification request = RestAssured.given().auth().form("manager@test.com", "manager", formConfig);
 
         final Map<String, String> params = new HashMap<String, String>();
         params.put("oldPassword", "abc");
