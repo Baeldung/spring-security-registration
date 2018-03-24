@@ -1,7 +1,5 @@
 package org.baeldung.spring;
 
-import java.util.Locale;
-
 import org.baeldung.validation.EmailValidator;
 import org.baeldung.validation.PasswordMatchesValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +12,11 @@ import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.context.request.RequestContextListener;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+
+import java.util.Locale;
 
 @Configuration
 @ComponentScan(basePackages = { "org.baeldung.web" })
@@ -59,6 +54,9 @@ public class MvcConfig extends WebMvcConfigurerAdapter {
         registry.addViewController("/changePassword.html");
         registry.addViewController("/users.html");
         registry.addViewController("/qrcode.html");
+        registry.addViewController("/qrcode.html");
+        registry.addViewController("/management.html");
+        registry.addViewController("/manager.html");
     }
 
     @Override
