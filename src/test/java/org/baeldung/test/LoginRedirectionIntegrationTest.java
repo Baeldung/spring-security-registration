@@ -42,21 +42,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class LoginRedirectionIntegrationTest {
 
     @Autowired
-    private UserRepository userRepository;
-
-
-    @Autowired
     private WebApplicationContext wac;
 
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 
-
     private MockMvc mockMvc;
 
-    private FormAuthConfig formConfig;
-
-    //
 
     @Before
     public void init() {
