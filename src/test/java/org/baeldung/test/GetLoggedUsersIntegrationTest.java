@@ -94,4 +94,19 @@ public class GetLoggedUsersIntegrationTest {
         assertTrue(response.body().asString().contains("test@test.com"));
     }
 
+    @Test
+    public void givenLoggedInUser_whenUsingManagerRolesWhileGettingLoggedUsersFromSessionRegistry_thenResponseContainsUser() {
+        final RequestSpecification request = RestAssured.given().auth().form("manager@test.com", "manager", formConfig);
+
+        final Map<String, String> params = new HashMap<String, String>();
+        params.put("password", "manager");
+
+        final Response response = request.with().params(params).get(SESSION_REGISTRY_LOGGED_USERS_URL);
+
+        assertEquals(200, response.statusCode());
+        assertTrue(response.body().asString().contains("manager@test.com"));
+        assertTrue(response.body().asString().contains("ROLE_MANAGER"));
+
+    }
+
 }
