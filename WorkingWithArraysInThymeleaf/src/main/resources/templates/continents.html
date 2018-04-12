@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Arrays in Thymeleaf</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	</head>
+	<body>
+		<h3>LIST OF CONTINENTS</h3>
+		<ul th:each="continent : ${countinents}">
+			<li th:text="${continent}"></li>
+		</ul>
+
+		<br />
+		<p th:each="continent : ${countinents}" th:text="${continent}"></p>
+	</body>
+</html>
