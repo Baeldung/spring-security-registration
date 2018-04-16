@@ -6,12 +6,19 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<body>
-		<h3>LIST OF CONTINENTS</h3>
-		<ul th:each="continent : ${countinents}">
-			<li th:text="${continent}"></li>
-		</ul>
+		<h3>THE CONTINENTS</h3>
+		<p>We have a total of <span th:text="${continents.length}"></span> continents in this world. Following is a list showing their order based on the number of population in each of them.</p>
+		<ol>
+			<li th:text="${continents[2]}"></li>
+			<li th:text="${continents[0]}"></li>
+			<li th:text="${continents[4]}"></li>
+			<li th:text="${continents[5]}"></li>
+			<li th:text="${continents[6]}"></li>
+			<li th:text="${continents[3]}"></li>
+			<li th:text="${continents[1]}"></li>
+		</ol>
 
-		<br />
-		<p th:each="continent : ${countinents}" th:text="${continent}"></p>
+		<p>Out of this <span th:text="${#arrays.length(continents)}"></span> continents, Asia has the highest population.</p>
+
 	</body>
 </html>

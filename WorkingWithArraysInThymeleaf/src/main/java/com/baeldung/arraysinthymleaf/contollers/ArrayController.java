@@ -1,7 +1,5 @@
 package com.baeldung.arraysinthymleaf.contollers;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,17 +10,17 @@ public class ArrayController
 	@GetMapping("/")
 	public String arrayController(Model model)
 	{
-		List<String> countinentsList = new ArrayList<String>();
+		String[] continents = new String[7];
 
-		countinentsList.add("Africa");
-		countinentsList.add("Antarctica");
-		countinentsList.add("Assia");
-		countinentsList.add("Australia");
-		countinentsList.add("Europe");
-		countinentsList.add("North America");
-		countinentsList.add("Sourth America");
+		continents[0] = "Africa";
+		continents[1] = "Antarctica";
+		continents[2] = "Assia";
+		continents[3] = "Australia";
+		continents[4] = "Europe";
+		continents[5] = "North America";
+		continents[6] = "Sourth America";
 
-		model.addAttribute("countinents", countinentsList);
+		model.addAttribute("continents", continents);
 
 		return "continents";
 	}
