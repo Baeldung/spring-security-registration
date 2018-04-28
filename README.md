@@ -26,6 +26,7 @@ If you're not yet a student, you can get access to the course here: http://bit.l
 - [Allow Authentication from Accepted Locations Only with Spring Security](http://www.baeldung.com/spring-security-restrict-authentication-by-geography)
 - [Spring Security – Auto Login User After Registration](http://www.baeldung.com/spring-security-auto-login-user-after-registration)
 - [Keep Track of Logged In Users with Spring Security](http://www.baeldung.com/spring-security-track-logged-in-users)
+- [Login For a Spring Web App – Error Handling and Localization](http://www.baeldung.com/spring-security-login-error-handling-localization)
 
 ### Build and Deploy the Project
 ```
