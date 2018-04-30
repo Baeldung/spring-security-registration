@@ -1,14 +1,5 @@
 package org.baeldung.security;
 
-import java.io.IOException;
-import java.util.Collection;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.baeldung.persistence.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,14 +11,20 @@ import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.util.Collection;
+
 @Component("myAuthenticationSuccessHandler")
 public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-
     @Autowired
-    ActiveUserStore activeUserStore;
+    private ActiveUserStore activeUserStore;
+    private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
     @Override
     public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) throws IOException {
@@ -52,25 +49,31 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
     }
 
     protected String determineTargetUrl(final Authentication authentication) {
-        boolean isUser = false;
-        boolean isAdmin = false;
+        String roleName = "UNDEFINED_ROLE";
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         for (final GrantedAuthority grantedAuthority : authorities) {
-            if (grantedAuthority.getAuthority().equals("READ_PRIVILEGE")) {
-                isUser = true;
-            } else if (grantedAuthority.getAuthority().equals("WRITE_PRIVILEGE")) {
-                isAdmin = true;
-                isUser = false;
+            if (grantedAuthority.getAuthority().equals("WRITE_PRIVILEGE")) {
+                roleName = "ROLE_ADMIN";
                 break;
+            } else if (grantedAuthority.getAuthority().equals("MANAGE_PRIVILEGE")) {
+                roleName = "ROLE_MANAGER";
+                break;
+            } else if (grantedAuthority.getAuthority().equals("READ_PRIVILEGE")) {
+                roleName = "ROLE_USER";
             }
         }
-        if (isUser) {
-            return "/homepage.html?user=" + authentication.getName();
-        } else if (isAdmin) {
-            return "/console.html";
-        } else {
-            throw new IllegalStateException();
+
+        switch (roleName) {
+            case "ROLE_USER":
+                return "/console.html";
+            case "ROLE_ADMIN":
+                return "/console.html";
+            case "ROLE_MANAGER":
+                return "/manager.html";
+            default:
+                throw new IllegalStateException();
         }
+
     }
 
     protected void clearAuthenticationAttributes(final HttpServletRequest request) {
@@ -81,11 +84,11 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
         session.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
     }
 
-    public void setRedirectStrategy(final RedirectStrategy redirectStrategy) {
-        this.redirectStrategy = redirectStrategy;
-    }
-
     protected RedirectStrategy getRedirectStrategy() {
         return redirectStrategy;
+    }
+
+    public void setRedirectStrategy(final RedirectStrategy redirectStrategy) {
+        this.redirectStrategy = redirectStrategy;
     }
 }
