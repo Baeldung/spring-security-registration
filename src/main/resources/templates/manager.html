@@ -1,0 +1,25 @@
+<html>
+
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+<title th:text="#{label.pages.home.title}"></title>
+</head>
+<body>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" th:href="@{/home.html}" th:text="#{label.pages.home.title}">home</a>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a th:href="@{/logout}" th:text="#{label.pages.logout}">logout</a> </li>
+      </ul>
+    </div>
+</nav>
+
+<div class="container">         
+     <p sec:authorize="!hasAuthority('MANAGE_PRIVILEGE')" th:text="#{message.unauth}">unauth</p>
+        
+     <h1 sec:authorize="hasAuthority('MANAGE_PRIVILEGE')" th:text="#{label.pages.manager.message}">manager</h1>
+</div>
+</body>
+</html>
