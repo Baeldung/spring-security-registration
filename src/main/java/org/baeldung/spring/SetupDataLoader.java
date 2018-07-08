@@ -48,16 +48,24 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         final Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
         final Privilege writePrivilege = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
         final Privilege passwordPrivilege = createPrivilegeIfNotFound("CHANGE_PASSWORD_PRIVILEGE");
+        // based on resources manager supervises
+        final Privilege supervisePrivilege = createPrivilegeIfNotFound("WRITE_SPECIFIC_PRIVILEGE");
 
         // == create initial roles
-        final List<Privilege> adminPrivileges = new ArrayList<Privilege>(Arrays.asList(readPrivilege, writePrivilege, passwordPrivilege));
+        final List<Privilege> adminPrivileges = new ArrayList<Privilege>(Arrays.asList(readPrivilege, writePrivilege, passwordPrivilege, supervisePrivilege));
         final List<Privilege> userPrivileges = new ArrayList<Privilege>(Arrays.asList(readPrivilege, passwordPrivilege));
+        final List<Privilege> managerPrivileges = new ArrayList<Privilege>(Arrays.asList(readPrivilege, passwordPrivilege,supervisePrivilege));
+        
         final Role adminRole = createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
         createRoleIfNotFound("ROLE_USER", userPrivileges);
+        
+        final Role managerRole = createRoleIfNotFound("ROLE_MANAGER", managerPrivileges);
 
         // == create initial user
         createUserIfNotFound("test@test.com", "Test", "Test", "test", new ArrayList<Role>(Arrays.asList(adminRole)));
+        createUserIfNotFound("testmanager@test.com", "TestManager", "TestManager", "manager", new ArrayList<Role>(Arrays.asList(managerRole)));
 
+        
         alreadySetup = true;
     }
 
