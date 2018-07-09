@@ -58,15 +58,15 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
         boolean isManager = false;
         boolean isAdmin = false;
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        final Collection<String> authorityList = authorities.stream().
-        		map(grantedAuthority -> grantedAuthority.getAuthority()).
-        		collect(Collectors.toList());
-        if(authorityList.contains("WRITE_PRIVILEGE")) 
-        	isAdmin = true;
-        else if(authorityList.contains("WRITE_SPECIFIC_PRIVILEGE")) 
-        	isManager = true;
-        else if(authorityList.contains("READ_PRIVILEGE"))
-        	isUser = true;
+        final Collection<String> authorityList = authorities.stream()
+            .map(grantedAuthority -> grantedAuthority.getAuthority())
+            .collect(Collectors.toList());
+        if (authorityList.contains("WRITE_PRIVILEGE"))
+            isAdmin = true;
+        else if (authorityList.contains("WRITE_SPECIFIC_PRIVILEGE"))
+            isManager = true;
+        else if (authorityList.contains("READ_PRIVILEGE"))
+            isUser = true;
         if (isUser) {
             return "/homepage.html?user=" + authentication.getName();
         } else if (isAdmin) {
