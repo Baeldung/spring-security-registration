@@ -77,6 +77,13 @@ public class ChangePasswordIntegrationTest {
 
         request.when().get("/console.html").then().assertThat().statusCode(200).and().body(containsString("home"));
     }
+    
+    @Test
+    public void givenNotAuthenticatedManager_whenLoggingIn_thenCorrect() {
+        final RequestSpecification request = RestAssured.given().auth().form("testmanager@test.com", "manager", formConfig);
+
+        request.when().get("/management.html").then().assertThat().statusCode(200);
+    }
 
     @Test
     public void givenNotAuthenticatedUser_whenBadPasswordLoggingIn_thenCorrect() {
