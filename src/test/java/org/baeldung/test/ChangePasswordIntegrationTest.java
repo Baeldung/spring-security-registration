@@ -45,6 +45,8 @@ public class ChangePasswordIntegrationTest {
 
     private FormAuthConfig formConfig;
     private String URL;
+    
+    private String LOGIN_URL;
 
     //
 
@@ -68,7 +70,8 @@ public class ChangePasswordIntegrationTest {
 
         final String URL_PREFIX = "http://localhost:" + String.valueOf(port);
         URL = URL_PREFIX + "/user/updatePassword";
-        formConfig = new FormAuthConfig(URL_PREFIX + "/login", "username", "password");
+        LOGIN_URL = URL_PREFIX + "/login";
+        formConfig = new FormAuthConfig(LOGIN_URL, "username", "password");
     }
 
     @Test
@@ -76,6 +79,26 @@ public class ChangePasswordIntegrationTest {
         final RequestSpecification request = RestAssured.given().auth().form("test@test.com", "test", formConfig);
 
         request.when().get("/console.html").then().assertThat().statusCode(200).and().body(containsString("home"));
+    }
+    
+    @Test
+    public void givenNotAuthenticatedManager_whenLoggingIn_thenCorrect() {
+        final RequestSpecification request = RestAssured.given().auth().form("testmanager@test.com", "manager", formConfig);
+
+        request.when().get("/management.html").then().assertThat().statusCode(200);
+    }
+    
+    @Test
+    public void givenNotAuthenticatedManager_whenLoggingIn_thenRedirect() {
+        final RequestSpecification request = RestAssured.given().redirects().follow(false);
+        
+        final Map<String, String> params = new HashMap<String, String>();
+        params.put("username", "testmanager@test.com");
+        params.put("password", "manager");
+        
+        final Response response = request.with().queryParameters(params).post(LOGIN_URL);
+        assertEquals(302, response.statusCode());
+        assertTrue(response.header("Location").contains("/management.html"));
     }
 
     @Test

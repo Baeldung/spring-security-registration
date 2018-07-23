@@ -1,7 +1,9 @@
 package org.baeldung.security;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -53,21 +55,24 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
 
     protected String determineTargetUrl(final Authentication authentication) {
         boolean isUser = false;
+        boolean isManager = false;
         boolean isAdmin = false;
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        for (final GrantedAuthority grantedAuthority : authorities) {
-            if (grantedAuthority.getAuthority().equals("READ_PRIVILEGE")) {
-                isUser = true;
-            } else if (grantedAuthority.getAuthority().equals("WRITE_PRIVILEGE")) {
-                isAdmin = true;
-                isUser = false;
-                break;
-            }
-        }
+        final Collection<String> authorityList = authorities.stream()
+            .map(grantedAuthority -> grantedAuthority.getAuthority())
+            .collect(Collectors.toList());
+        if (authorityList.contains("WRITE_PRIVILEGE"))
+            isAdmin = true;
+        else if (authorityList.contains("WRITE_SPECIFIC_PRIVILEGE"))
+            isManager = true;
+        else if (authorityList.contains("READ_PRIVILEGE"))
+            isUser = true;
         if (isUser) {
             return "/homepage.html?user=" + authentication.getName();
         } else if (isAdmin) {
             return "/console.html";
+        } else if (isManager) {
+            return "/management.html";
         } else {
             throw new IllegalStateException();
         }
