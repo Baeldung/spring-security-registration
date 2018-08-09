@@ -45,6 +45,15 @@ mysql -u root -p
 > FLUSH PRIVILEGES;
 ```
 
+### Set up PostgreSQL
+Create user:
+```
+$ createuser --no-superuser --no-createdb --no-createrole --pwprompt tutorialuser
+```
+At the prompt enter the password `tutorialpostgresql`. After that create the database:
+```
+$ createdb --encoding=UTF-8 --owner=tutorialuser registration_02
+```
 
 ### Set up Email
 
