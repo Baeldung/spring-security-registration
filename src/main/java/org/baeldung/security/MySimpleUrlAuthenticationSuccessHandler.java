@@ -2,6 +2,8 @@ package org.baeldung.security;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -36,14 +38,8 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
         final HttpSession session = request.getSession(false);
         if (session != null) {
             session.setMaxInactiveInterval(30 * 60);
-            
-            String username;
-            if (authentication.getPrincipal() instanceof User) {
-            	username = ((User)authentication.getPrincipal()).getEmail();
-            }
-            else {
-            	username = authentication.getName();
-            }
+
+            String username = getUserName(authentication);
             LoggedUser user = new LoggedUser(username, activeUserStore);
             session.setAttribute("user", user);
         }
@@ -61,33 +57,38 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
     }
 
     protected String determineTargetUrl(final Authentication authentication) {
-        boolean isUser = false;
-        boolean isAdmin = false;
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        for (final GrantedAuthority grantedAuthority : authorities) {
-            if (grantedAuthority.getAuthority().equals("READ_PRIVILEGE")) {
-                isUser = true;
-            } else if (grantedAuthority.getAuthority().equals("WRITE_PRIVILEGE")) {
-                isAdmin = true;
-                isUser = false;
-                break;
+        final Set<String> privileges = authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
+
+        if (privileges.contains("READ_PRIVILEGE")) {
+            if (privileges.contains("MANAGER_PRIVILEGE")) {
+                return "/management.html";
+            } else if (privileges.contains("WRITE_PRIVILEGE")) {
+                return "/console.html";
             }
-        }
-        if (isUser) {
-        	 String username;
-             if (authentication.getPrincipal() instanceof User) {
-             	username = ((User)authentication.getPrincipal()).getEmail();
-             }
-             else {
-             	username = authentication.getName();
-             }
-        
-            return "/homepage.html?user="+username;
-        } else if (isAdmin) {
-            return "/console.html";
+            String username = getUserName(authentication);
+            return "/homepage.html?user=" + username;
+
         } else {
+
             throw new IllegalStateException();
         }
+    }
+
+    /**
+     * Extract a user name from the authentication.
+     *
+     * @param authentication
+     * @return
+     */
+    private String getUserName(Authentication authentication) {
+        String username;
+        if (authentication.getPrincipal() instanceof User) {
+            username = ((User) authentication.getPrincipal()).getEmail();
+        } else {
+            username = authentication.getName();
+        }
+        return username;
     }
 
     protected void clearAuthenticationAttributes(final HttpServletRequest request) {
