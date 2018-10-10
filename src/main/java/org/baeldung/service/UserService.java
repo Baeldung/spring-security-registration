@@ -33,7 +33,7 @@ import org.springframework.stereotype.Service;
 public class UserService implements IUserService {
 
     @Autowired
-    private UserRepository repository;
+    private UserRepository userRepository;
 
     @Autowired
     private VerificationTokenRepository tokenRepository;
@@ -72,7 +72,7 @@ public class UserService implements IUserService {
         user.setEmail(accountDto.getEmail());
         user.setUsing2FA(accountDto.isUsing2FA());
         user.setRoles(Arrays.asList(roleRepository.findByName("ROLE_USER")));
-        return repository.save(user);
+        return userRepository.save(user);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class UserService implements IUserService {
 
     @Override
     public void saveRegisteredUser(final User user) {
-        repository.save(user);
+        userRepository.save(user);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class UserService implements IUserService {
             passwordTokenRepository.delete(passwordToken);
         }
 
-        repository.delete(user);
+        userRepository.delete(user);
     }
 
     @Override
@@ -134,7 +134,7 @@ public class UserService implements IUserService {
 
     @Override
     public User findUserByEmail(final String email) {
-        return repository.findByEmail(email);
+        return userRepository.findByEmail(email);
     }
 
     @Override
@@ -150,13 +150,13 @@ public class UserService implements IUserService {
 
     @Override
     public Optional<User> getUserByID(final long id) {
-        return repository.findById(id);
+        return userRepository.findById(id);
     }
 
     @Override
     public void changeUserPassword(final User user, final String password) {
         user.setPassword(passwordEncoder.encode(password));
-        repository.save(user);
+        userRepository.save(user);
     }
 
     @Override
@@ -206,7 +206,7 @@ public class UserService implements IUserService {
     }
 
     private boolean emailExist(final String email) {
-        return repository.findByEmail(email) != null;
+        return userRepository.findByEmail(email) != null;
     }
 
     @Override
