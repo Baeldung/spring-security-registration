@@ -8,12 +8,13 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = Application.class, webEnvironment = WebEnvironment.MOCK)
 public class ApplicationTest {
     /**
      * Test that the application context is loaded correctly
      */
     @Test
-    public void whenStartApplication_thenNoErrors() {
+    public void whenStartApplication_thenNoExceptions() {
+        assert(true);
     }
 }
