@@ -86,7 +86,7 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
             .stream()
             .map(GrantedAuthority::getAuthority)
             .collect(Collectors.toSet());
-        return privileges.contains("WRITE_PRIVILEGE") ? "ROLE_ADMIN" : privileges.contains("READ_PRIVILEGE") ? "ROLE_USER" : null;
+        return privileges.contains("MANAGER_PRIVILEGE") ? "ROLE_MANAGER" : privileges.contains("WRITE_PRIVILEGE") ? "ROLE_ADMIN" : privileges.contains("READ_PRIVILEGE") ? "ROLE_USER" : null;
     }
 
     protected void clearAuthenticationAttributes(final HttpServletRequest request) {
