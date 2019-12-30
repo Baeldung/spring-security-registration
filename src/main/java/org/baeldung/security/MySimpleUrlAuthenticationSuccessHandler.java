@@ -7,11 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.baeldung.persistence.model.Role;
+import org.baeldung.persistence.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
@@ -51,22 +52,18 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
     }
 
     protected String determineTargetUrl(final Authentication authentication) {
-        boolean isUser = false;
-        boolean isAdmin = false;
-        final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        for (final GrantedAuthority grantedAuthority : authorities) {
-            if (grantedAuthority.getAuthority().equals("READ_PRIVILEGE")) {
-                isUser = true;
-            } else if (grantedAuthority.getAuthority().equals("WRITE_PRIVILEGE")) {
-                isAdmin = true;
-                isUser = false;
-                break;
-            }
-        }
-        if (isUser) {
-            return "/homepage.html?user=" + authentication.getName();
-        } else if (isAdmin) {
+        Collection<Role> roles = ((User) authentication.getPrincipal()).getRoles();
+
+        boolean isAdmin = roles.stream().anyMatch(r -> r.getName().equalsIgnoreCase("ROLE_ADMIN"));
+        boolean isManager = roles.stream().anyMatch(r -> r.getName().equalsIgnoreCase("ROLE_MANAGER"));
+        boolean isUser = roles.stream().anyMatch(r -> r.getName().equalsIgnoreCase("ROLE_USER"));
+
+        if (isAdmin) {
             return "/console.html";
+        } else if (isManager) {
+            return "/management.html";
+        } else if (isUser) {
+            return "/homepage.html?user=" + authentication.getName();
         } else {
             throw new IllegalStateException();
         }
