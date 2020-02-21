@@ -1,0 +1,24 @@
+<html xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+<title th:text="#{label.pages.home.title}"></title>
+</head>
+<body>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" th:href="@{/homepage.html}" th:text="#{label.pages.home.title}">home</a>
+      </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a th:href="@{/logout}" th:text="#{label.pages.logout}">logout</a> </li>
+      </ul>
+    </div>
+</nav>
+<p sec:authorize="!hasAuthority('MANAGER_PRIVILEGE')" th:text="#{message.unauth}">unauth</p>
+<div sec:authorize="hasAuthority('MANAGER_PRIVILEGE')" >
+  <div class="container">
+       <h1>Welcome to the manager home page :)</h1>
+  </div>
+</div>
+</body>
+</html>
