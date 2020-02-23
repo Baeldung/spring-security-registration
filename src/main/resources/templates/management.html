@@ -1,0 +1,33 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+</head>
+<body>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" th:href="@{/homepage.html}" th:text="#{label.pages.home.title}">home</a>
+    </div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a th:href="@{/logout}" th:text="#{label.pages.logout}">logout</a> </li>
+      </ul>
+    </div>
+</nav>
+
+<div class="container">
+	<div th:if="${param.message != null}" class="alert alert-info" th:text="${param.message[0]}">message</div>
+
+    <h1>This is the landing page for the Manager</h1>
+
+    <div sec:authorize="hasAuthority('READ_PRIVILEGE')">This text is only visible to a user</div>
+
+    <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')"> This text is only visible to an admin</div>
+
+  <div sec:authorize="hasAuthority('UPDATE_PRIVILEGE')"> This text is only visible for Manager</div>
+
+
+
+<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>-->
+</body>
+
+</html>
