@@ -6,16 +6,16 @@
 <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" th:href="@{/homepage.html}" th:text="#{label.pages.home.title}">home</a>
+      <a class="navbar-brand" th:href="@{/homepage.html}" th:utext="#{label.pages.home.title}">home</a>
     </div> 
       <ul class="nav navbar-nav navbar-right">
-        <li><a th:href="@{/logout}" th:text="#{label.pages.logout}">logout</a> </li>
+        <li><a th:href="@{/logout}" th:utext="#{label.pages.logout}">logout</a> </li>
       </ul>
     </div>
 </nav>
 
 <div class="container">
-	<div th:if="${param.message != null}" class="alert alert-info" th:text="${param.message[0]}">message</div>
+	<div th:if="${param.message != null}" class="alert alert-info" th:utext="${param.message[0]}">message</div>
 	
     <h1>This is the landing page for the admin</h1>
     
@@ -23,9 +23,9 @@
           
     <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')"> This text is only visible to an admin</div>
     
-      <a class="btn btn-default" th:href="@{/admin.html}" th:text="#{label.pages.admin}">admin</a>
+      <a class="btn btn-default" th:href="@{/admin.html}" th:utext="#{label.pages.admin}">admin</a>
       <br/>
-      <a class="btn btn-default" th:href="@{/changePassword.html}" th:text="#{message.changePassword}">change password</a>
+      <a class="btn btn-default" th:href="@{/changePassword.html}" th:utext="#{message.changePassword}">change password</a>
       <br/>
       <br/>
       <br/>

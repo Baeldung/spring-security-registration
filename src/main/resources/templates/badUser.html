@@ -1,17 +1,17 @@
 <html>
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
-    <title th:text="#{label.badUser.title}">bad user</title>
+    <title th:utext="#{label.badUser.title}">bad user</title>
 </head>
 <body>
 <div class="container">
-<h1 class="alert alert-danger" th:text="${param.message[0]}">error</h1>
+<h1 class="alert alert-danger" th:utext="${param.message[0]}">error</h1>
 <br/>
-<a class="btn btn-default" th:href="@{/registration.html}" th:text="#{label.form.loginSignUp}">signup</a>
+<a class="btn btn-default" th:href="@{/registration.html}" th:utext="#{label.form.loginSignUp}">signup</a>
 
 <div th:if="${param.expired[0]}">
 <br/>
-<h1 th:text="#{label.form.resendRegistrationToken}">resend</h1>
+<h1 th:utext="#{label.form.resendRegistrationToken}">resend</h1>
 <button onclick="resendToken()">resend</button>
 
 

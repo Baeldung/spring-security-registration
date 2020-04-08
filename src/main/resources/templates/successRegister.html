@@ -3,12 +3,12 @@
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII"/>
-<title th:text="#{label.pages.home.title}">home</title>
+<title th:utext="#{label.pages.home.title}">home</title>
 </head>
 <body>
 <div class="container">
-    <h1 class="alert alert-success" th:text="#{message.regSucc}">success</h1>
-    <a th:href="@{/login}" th:text="#{label.login}">login</a>
+    <h1 class="alert alert-success" th:utext="#{message.regSucc}">success</h1>
+    <a th:href="@{/login}" th:utext="#{label.login}">login</a>
 </div>
 </body>
 </html>

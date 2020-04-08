@@ -11,39 +11,39 @@ color:#000;
 <script th:src="@{/resources/pwstrength.js}"></script>
 <script src='https://www.google.com/recaptcha/api.js'></script>
 <meta http-equiv="Content-Type" content="text/html; charset=US-ASCII"/>
-<title th:text="#{label.form.title}">form</title>
+<title th:utext="#{label.form.title}">form</title>
 </head>
 <body>
     <div class="container">
         <div >
-            <h1 th:text="#{label.form.title}">form</h1>
+            <h1 th:utext="#{label.form.title}">form</h1>
             <br/>
             <form action="/" method="POST" enctype="utf8">
                 <div class="form-group row" >
-                    <label class="col-sm-3" th:text="#{label.user.firstName}">first</label>
+                    <label class="col-sm-3" th:utext="#{label.user.firstName}">first</label>
                     <span class="col-sm-5"><input class="form-control" name="firstName" value="" required="required"/></span>
                     <span id="firstNameError" class="alert alert-danger col-sm-4" style="display:none"></span>
                     
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-3" th:text="#{label.user.lastName}">last</label>
+                    <label class="col-sm-3" th:utext="#{label.user.lastName}">last</label>
                     <span class="col-sm-5"><input class="form-control" name="lastName" value="" required="required"/></span>
                     <span id="lastNameError" class="alert alert-danger col-sm-4" style="display:none"></span>
                     
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-3" th:text="#{label.user.email}">email</label>
+                    <label class="col-sm-3" th:utext="#{label.user.email}">email</label>
                     <span class="col-sm-5"><input type="email" class="form-control" name="email" value="" required="required"/></span>                    
                     <span id="emailError" class="alert alert-danger col-sm-4" style="display:none"></span>
                     
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-3" th:text="#{label.user.password}">password</label>
+                    <label class="col-sm-3" th:utext="#{label.user.password}">password</label>
                     <span class="col-sm-5"><input id="password" class="form-control" name="password" value="" type="password" required="required"/></span>
                     <span id="passwordError" class="alert alert-danger col-sm-4" style="display:none"></span>
                 </div>
                 <div class="form-group row">
-                    <label class="col-sm-3" th:text="#{label.user.confirmPass}">confirm</label>
+                    <label class="col-sm-3" th:utext="#{label.user.confirmPass}">confirm</label>
                     <span class="col-sm-5"><input id="matchPassword" class="form-control" name="matchingPassword" value="" type="password" required="required"/></span>
                     <span id="globalError" class="alert alert-danger col-sm-4" style="display:none"></span>
                 </div>
@@ -54,10 +54,10 @@ color:#000;
                     <span id="captchaError" class="alert alert-danger col-sm-4" style="display:none"></span>
                 </div>
                 <br/>
-                <button type="submit" class="btn btn-primary" th:text="#{label.form.submit}">submit</button>
+                <button type="submit" class="btn btn-primary" th:utext="#{label.form.submit}">submit</button>
             </form>
             <br/> 
-            <a th:href="@{/login}" th:text="#{label.form.loginLink}">login</a>
+            <a th:href="@{/login}" th:utext="#{label.form.loginLink}">login</a>
         </div>
     </div>
 

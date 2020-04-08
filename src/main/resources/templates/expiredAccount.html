@@ -1,13 +1,13 @@
 <html>
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
-    <title th:text="#{label.pages.home.title}">home</title>
+    <title th:utext="#{label.pages.home.title}">home</title>
 </head>
 <body>
 <div class="container">
-<h1 class="alert alert-info" th:text="#{auth.message.expired}">expired</h1>
+<h1 class="alert alert-info" th:utext="#{auth.message.expired}">expired</h1>
 <br/>
-<a class="btn btn-default" th:href="@{/registration.html}" th:text="#{label.form.loginSignUp}">signup</a>
+<a class="btn btn-default" th:href="@{/registration.html}" th:utext="#{label.form.loginSignUp}">signup</a>
 </div>
 </body>
 </html>

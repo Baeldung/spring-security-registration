@@ -10,21 +10,23 @@ import org.springframework.web.client.RestClientException;
 import com.baeldung.web.error.ReCaptchaInvalidException;
 import com.baeldung.web.error.ReCaptchaUnavailableException;
 
-@Service("captchaService")
-public class CaptchaService extends AbstractCaptchaService {
+@Service("captchaServiceV3")
+public class CaptchaServiceV3 extends AbstractCaptchaService {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(CaptchaService.class);
-
+    private final static Logger LOGGER = LoggerFactory.getLogger(CaptchaServiceV3.class);
+    
+    public static final String REGISTER_ACTION = "register";
+    
     @Override
-    public void processResponse(final String response) {
+    public void processResponse(String response, final String action) throws ReCaptchaInvalidException {
         securityCheck(response);
-
+        
         final URI verifyUri = URI.create(String.format(RECAPTCHA_URL_TEMPLATE, getReCaptchaSecret(), response, getClientIP()));
         try {
             final GoogleResponse googleResponse = restTemplate.getForObject(verifyUri, GoogleResponse.class);
             LOGGER.debug("Google's response: {} ", googleResponse.toString());
 
-            if (!googleResponse.isSuccess()) {
+            if (!googleResponse.isSuccess() || !googleResponse.getAction().equals(action) || googleResponse.getScore() < captchaSettings.getThreshold()) {
                 if (googleResponse.hasClientError()) {
                     reCaptchaAttemptService.reCaptchaFailed(getClientIP());
                 }
@@ -34,5 +36,5 @@ public class CaptchaService extends AbstractCaptchaService {
             throw new ReCaptchaUnavailableException("Registration unavailable at this time.  Please try again later.", rce);
         }
         reCaptchaAttemptService.reCaptchaSucceeded(getClientIP());
-    }
+    } 
 }

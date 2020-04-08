@@ -43,25 +43,25 @@ label{padding-left:0 !important}
 </style>
 </head>
 <body onload="display_username()">
-<div th:if="${param.message != null}" class="alert alert-info" th:text="${param.message[0]}">message</div>
+<div th:if="${param.message != null}" class="alert alert-info" th:utext="${param.message[0]}">message</div>
 
 
-<div th:if="${param.error != null}" class="alert alert-danger" th:text="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</div>
+<div th:if="${param.error != null}" class="alert alert-danger" th:utext="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</div>
 
     <div class="container">
         <div class="row wrapper">
-            <h1 th:text="#{label.form.loginTitle}">Header</h1>
+            <h1 th:utext="#{label.form.loginTitle}">Header</h1>
             <br/><br/>
             
             <form name='f' action="login" method='POST' onsubmit="return validate();">
                  <span id="welcometext">&nbsp;</span>
                  
                  <br /><br />
-                 <label class="col-sm-4" th:text="#{label.form.loginEmail}">Email</label>
+                 <label class="col-sm-4" th:utext="#{label.form.loginEmail}">Email</label>
                  <span class="col-sm-8"><input class="form-control" type='text' name='username' value=''/></span>
                 
                 <br/><br/>        
-                 <label class="col-sm-4" th:text="#{label.form.loginPass}">password</label>
+                 <label class="col-sm-4" th:utext="#{label.form.loginPass}">password</label>
                  <span class="col-sm-8"><input class="form-control" type='password' name='password' /></span>
                 
                 

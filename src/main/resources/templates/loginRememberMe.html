@@ -2,7 +2,7 @@
 
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
-<title th:text="#{label.pages.home.title}">Title</title>
+<title th:utext="#{label.pages.home.title}">Title</title>
 <script th:inline="javascript">
 	function validate() {
         if (document.f.username.value == "" && document.f.password.value == "") {
@@ -29,48 +29,48 @@ label{padding-left:0 !important}
 </style>
 </head>
 <body>
-<div th:if="${param.message != null}" class="alert alert-info" th:text="${param.message[0]}">message</div>
+<div th:if="${param.message != null}" class="alert alert-info" th:utext="${param.message[0]}">message</div>
 
 
-<div th:if="${param.error != null}" class="alert alert-danger" th:text="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</div>
+<div th:if="${param.error != null}" class="alert alert-danger" th:utext="${session[SPRING_SECURITY_LAST_EXCEPTION]}">error</div>
 
     <div class="container">
         <div class="row wrapper">
-            <h1 th:text="#{label.form.loginTitle}">Header</h1>
-             <a href="?lang=en" th:text="#{label.form.loginEnglish}">login</a> | 
-             <a href="?lang=es_ES" th:text="#{label.form.loginSpanish}">login</a>
+            <h1 th:utext="#{label.form.loginTitle}">Header</h1>
+             <a href="?lang=en" th:utext="#{label.form.loginEnglish}">login</a> |
+             <a href="?lang=es_ES" th:utext="#{label.form.loginSpanish}">login</a>
             <br/><br/>
             
             <form name='f' action="login" method='POST' onsubmit="return validate();">
                  <span id="welcometext">&nbsp;</span>
                  
                  <br /><br />
-                 <label class="col-sm-4" th:text="#{label.form.loginEmail}">Email</label>
+                 <label class="col-sm-4" th:utext="#{label.form.loginEmail}">Email</label>
                  <span class="col-sm-8"><input class="form-control" type='text' name='username' value=''/></span>
                 
                 <br/><br/>        
-                 <label class="col-sm-4" th:text="#{label.form.loginPass}">password</label>
+                 <label class="col-sm-4" th:utext="#{label.form.loginPass}">password</label>
                  <span class="col-sm-8"><input class="form-control" type='password' name='password' /></span>
                 
                 <br/><br/>        
-                 <label class="col-sm-4" th:text="#{label.form.login2fa}">Google Authenticator Verification Code</label>
+                 <label class="col-sm-4" th:utext="#{label.form.login2fa}">Google Authenticator Verification Code</label>
                  <span class="col-sm-8"><input class="form-control" type='text' name='code' /></span>
                 
                 <div class="clearfix"></div>
                 <br/>
-                <label  th:text="#{label.form.rememberMe}"> Remember Me</label>
+                <label  th:utext="#{label.form.rememberMe}"> Remember Me</label>
                 <input type="checkbox" name="remember-me" />
                 
                 <br/><br/>
                  <input class="btn btn-primary" name="submit" type="submit" th:value="#{label.form.submit}" />
                         
             </form>
-            <br/> Current Locale :  <span th:text="${#locale}"></span><br/><br/> 
-             <a class="btn btn-default" th:href="@{/registration.html}" th:text="#{label.form.loginSignUp}">signup</a>
+            <br/> Current Locale :  <span th:utext="${#locale}"></span><br/><br/>
+             <a class="btn btn-default" th:href="@{/registration.html}" th:utext="#{label.form.loginSignUp}">signup</a>
              <br/>
-             <a class="btn btn-default" th:href="@{/registrationCaptcha.html}" th:text="#{label.form.loginSignUpCaptcha}">captcha signup</a>
+             <a class="btn btn-default" th:href="@{/registrationCaptcha.html}" th:utext="#{label.form.loginSignUpCaptcha}">captcha signup</a>
              <br/><br/>
-            <a class="btn btn-default" th:href="@{/forgetPassword.html}" th:text="#{message.resetPassword}">reset</a>
+            <a class="btn btn-default" th:href="@{/forgetPassword.html}" th:utext="#{message.resetPassword}">reset</a>
         </div>
     </div>
 </body>
