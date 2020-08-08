@@ -5,11 +5,11 @@
 </head>
 <body>
 <div class="container">
-<h1 class="alert alert-danger" th:utext="${param.message[0]}">error</h1>
+<h1 class="alert alert-danger" th:utext="${message}">error</h1>
 <br/>
 <a class="btn btn-default" th:href="@{/registration.html}" th:utext="#{label.form.loginSignUp}">signup</a>
 
-<div th:if="${param.expired[0]}">
+<div th:if="${expired}">
 <br/>
 <h1 th:utext="#{label.form.resendRegistrationToken}">resend</h1>
 <button onclick="resendToken()">resend</button>
@@ -20,7 +20,7 @@
 var serverContext = [[@{/}]];
 
 function resendToken(){
-	var token = [[${param.token}]];
+	var token = [[${token}]];
     $.get(serverContext + "user/resendRegistrationToken?token="+token, function(data){
         window.location.href = serverContext +"login?message=" + data.message;
     })

@@ -84,7 +84,7 @@ public class DeviceServiceIntegrationTest {
                 .post("/login");
 
         assertEquals(302, response.statusCode());
-        assertEquals("http://localhost:" + port + "/console.html", response.getHeader("Location"));
+        assertEquals("http://localhost:" + port + "/console", response.getHeader("Location"));
         verify(mailSender, times(1)).send(any(SimpleMailMessage.class));
     }
 
@@ -104,7 +104,7 @@ public class DeviceServiceIntegrationTest {
                 .post("/login");
 
         assertEquals(302, response.statusCode());
-        assertEquals("http://localhost:" + port + "/console.html", response.getHeader("Location"));
+        assertEquals("http://localhost:" + port + "/console", response.getHeader("Location"));
         verify(mailSender, times(0)).send(any(SimpleMailMessage.class));
     }
 
@@ -124,7 +124,7 @@ public class DeviceServiceIntegrationTest {
                 .post("/login");
 
         assertEquals(302, response.statusCode());
-        assertEquals("http://localhost:" + port + "/console.html", response.getHeader("Location"));
+        assertEquals("http://localhost:" + port + "/console", response.getHeader("Location"));
         verify(mailSender, times(1)).send(any(SimpleMailMessage.class));
     }
 
@@ -144,7 +144,7 @@ public class DeviceServiceIntegrationTest {
                 .post("/login");
 
         assertEquals(302, response.statusCode());
-        assertEquals("http://localhost:" + port + "/console.html", response.getHeader("Location"));
+        assertEquals("http://localhost:" + port + "/console", response.getHeader("Location"));
         verify(mailSender, times(1)).send(any(SimpleMailMessage.class));
     }
 

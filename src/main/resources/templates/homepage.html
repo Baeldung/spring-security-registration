@@ -20,7 +20,7 @@
 	
 	    <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')" th:utext="#{label.pages.admin.message}"></div>
 	     
-	    <p th:if="${param.user} != null" th:utext="${param.user[0]}">user</p>
+	    <p th:if="${param.user} != null" th:text="${param.user[0]}">user</p>
 	     
 	    <a class="btn btn-default" th:href="@{/admin.html}" th:utext="#{label.pages.admin}">admin</a>
 		<br /> <br />

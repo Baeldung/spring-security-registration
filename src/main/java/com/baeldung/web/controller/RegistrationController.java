@@ -40,12 +40,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class RegistrationController {
@@ -77,7 +78,6 @@ public class RegistrationController {
     }
 
     // Registration
-
     @PostMapping("/user/registration")
     @ResponseBody
     public GenericResponse registerUserAccount(@Valid final UserDto accountDto, final HttpServletRequest request) {
@@ -90,8 +90,9 @@ public class RegistrationController {
     }
 
     @GetMapping("/registrationConfirm")
-    public String confirmRegistration(final HttpServletRequest request, final Model model, @RequestParam("token") final String token) throws UnsupportedEncodingException {
+    public ModelAndView confirmRegistration(final HttpServletRequest request, final ModelMap model, @RequestParam("token") final String token) throws UnsupportedEncodingException {
         Locale locale = request.getLocale();
+        model.addAttribute("lang", locale.getLanguage());
         final String result = userService.validateVerificationToken(token);
         if (result.equals("valid")) {
             final User user = userService.getUser(token);
@@ -100,14 +101,51 @@ public class RegistrationController {
             // return "redirect:/qrcode.html?lang=" + locale.getLanguage();
             // }
             authWithoutPassword(user);
-            model.addAttribute("message", messages.getMessage("message.accountVerified", null, locale));
-            return "redirect:/console.html?lang=" + locale.getLanguage();
+            model.addAttribute("messageKey", "message.accountVerified");
+            return new ModelAndView("redirect:/console", model);
         }
 
-        model.addAttribute("message", messages.getMessage("auth.message." + result, null, locale));
+        model.addAttribute("messageKey", "auth.message." + result);
         model.addAttribute("expired", "expired".equals(result));
         model.addAttribute("token", token);
-        return "redirect:/badUser.html?lang=" + locale.getLanguage();
+        return new ModelAndView("redirect:/badUser", model);
+    }
+
+    @GetMapping("/console")
+    public ModelAndView console(final HttpServletRequest request,
+                                final ModelMap model,
+                                @RequestParam("messageKey") final Optional<String> messageKey
+    ) {
+
+        Locale locale = request.getLocale();
+        messageKey.ifPresent( key -> {
+                    String message = messages.getMessage(key, null, locale);
+                    model.addAttribute("message", message);
+                }
+        );
+
+        return new ModelAndView("console", model);
+    }
+
+    @GetMapping("/badUser")
+    public ModelAndView badUser(final HttpServletRequest request,
+                                final ModelMap model,
+                                @RequestParam("messageKey" ) final Optional<String> messageKey,
+                                @RequestParam("expired" ) final Optional<String> expired,
+                                @RequestParam("token" ) final Optional<String> token
+    ) {
+
+        Locale locale = request.getLocale();
+        messageKey.ifPresent( key -> {
+                    String message = messages.getMessage(key, null, locale);
+                    model.addAttribute("message", message);
+                }
+        );
+
+        expired.ifPresent( e -> model.addAttribute("expired", e));
+        token.ifPresent( t -> model.addAttribute("token", t));
+
+        return new ModelAndView("badUser", model);
     }
 
     // user activation - verification
@@ -135,20 +173,55 @@ public class RegistrationController {
     }
 
     @GetMapping("/user/changePassword")
-    public String showChangePasswordPage(
-            final Locale locale,
-            final Model model,
+    public ModelAndView showChangePasswordPage(
+            final ModelMap model,
             @RequestParam("token") final String token
     ) {
         final String result = securityUserService.validatePasswordResetToken(token);
 
         if(result != null) {
-            String message = messages.getMessage("auth.message." + result, null, locale);
-            return "redirect:/login.html?lang=" + locale.getLanguage() + "&message=" + message;
+            String messageKey = "auth.message." + result;
+            model.addAttribute("messageKey", messageKey);
+            return new ModelAndView("redirect:/login", model);
         } else {
             model.addAttribute("token", token);
-            return "redirect:/updatePassword.html?lang=" + locale.getLanguage();
+            return new ModelAndView("redirect:/updatePassword");
         }
+    }
+
+    @GetMapping("/updatePassword")
+    public ModelAndView updatePassword(final HttpServletRequest request,
+                                       final ModelMap model,
+                                       @RequestParam("messageKey" ) final Optional<String> messageKey
+    ) {
+        Locale locale = request.getLocale();
+        model.addAttribute("lang", locale.getLanguage());
+        messageKey.ifPresent( key -> {
+                    String message = messages.getMessage(key, null, locale);
+                    model.addAttribute("message", message);
+                }
+        );
+
+        return new ModelAndView("updatePassword", model);
+    }
+
+    @GetMapping("/login")
+    public ModelAndView login(final HttpServletRequest request,
+                                       final ModelMap model,
+                                       @RequestParam("messageKey" ) final Optional<String> messageKey,
+                                       @RequestParam("error" ) final Optional<String> error
+    ) {
+        Locale locale = request.getLocale();
+        model.addAttribute("lang", locale.getLanguage());
+        messageKey.ifPresent( key -> {
+                    String message = messages.getMessage(key, null, locale);
+                    model.addAttribute("message", message);
+                }
+        );
+
+        error.ifPresent( e ->  model.addAttribute("error", e));
+
+        return new ModelAndView("login", model);
     }
 
     @PostMapping("/user/savePassword")
