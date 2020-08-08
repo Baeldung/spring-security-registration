@@ -94,9 +94,9 @@ public class PasswordResetToken {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((expiryDate == null) ? 0 : expiryDate.hashCode());
-        result = prime * result + ((token == null) ? 0 : token.hashCode());
-        result = prime * result + ((user == null) ? 0 : user.hashCode());
+        result = prime * result + ((getExpiryDate() == null) ? 0 : getExpiryDate().hashCode());
+        result = prime * result + ((getToken() == null) ? 0 : getToken().hashCode());
+        result = prime * result + ((getUser() == null) ? 0 : getUser().hashCode());
         return result;
     }
 
@@ -112,25 +112,25 @@ public class PasswordResetToken {
             return false;
         }
         final PasswordResetToken other = (PasswordResetToken) obj;
-        if (expiryDate == null) {
-            if (other.expiryDate != null) {
+        if (getExpiryDate() == null) {
+            if (other.getExpiryDate() != null) {
                 return false;
             }
-        } else if (!expiryDate.equals(other.expiryDate)) {
+        } else if (!getExpiryDate().equals(other.getExpiryDate())) {
             return false;
         }
-        if (token == null) {
-            if (other.token != null) {
+        if (getToken() == null) {
+            if (other.getToken() != null) {
                 return false;
             }
-        } else if (!token.equals(other.token)) {
+        } else if (!getToken().equals(other.getToken())) {
             return false;
         }
-        if (user == null) {
-            if (other.user != null) {
+        if (getUser() == null) {
+            if (other.getUser() != null) {
                 return false;
             }
-        } else if (!user.equals(other.user)) {
+        } else if (!getUser().equals(other.getUser())) {
             return false;
         }
         return true;

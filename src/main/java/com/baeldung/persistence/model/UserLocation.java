@@ -70,10 +70,10 @@ public class UserLocation {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = (prime * result) + ((country == null) ? 0 : country.hashCode());
-        result = (prime * result) + (enabled ? 1231 : 1237);
-        result = (prime * result) + ((id == null) ? 0 : id.hashCode());
-        result = (prime * result) + ((user == null) ? 0 : user.hashCode());
+        result = (prime * result) + ((getCountry() == null) ? 0 : getCountry().hashCode());
+        result = (prime * result) + (isEnabled() ? 1231 : 1237);
+        result = (prime * result) + ((getId() == null) ? 0 : getId().hashCode());
+        result = (prime * result) + ((getUser() == null) ? 0 : getUser().hashCode());
         return result;
     }
 
@@ -89,28 +89,28 @@ public class UserLocation {
             return false;
         }
         final UserLocation other = (UserLocation) obj;
-        if (country == null) {
-            if (other.country != null) {
+        if (getCountry() == null) {
+            if (other.getCountry() != null) {
                 return false;
             }
-        } else if (!country.equals(other.country)) {
+        } else if (!getCountry().equals(other.getCountry())) {
             return false;
         }
-        if (enabled != other.enabled) {
+        if (isEnabled() != other.isEnabled()) {
             return false;
         }
-        if (id == null) {
-            if (other.id != null) {
+        if (getId() == null) {
+            if (other.getId() != null) {
                 return false;
             }
-        } else if (!id.equals(other.id)) {
+        } else if (!getId().equals(other.getId())) {
             return false;
         }
-        if (user == null) {
-            if (other.user != null) {
+        if (getUser() == null) {
+            if (other.getUser() != null) {
                 return false;
             }
-        } else if (!user.equals(other.user)) {
+        } else if (!getUser().equals(other.getUser())) {
             return false;
         }
         return true;

@@ -26,6 +26,7 @@ import com.baeldung.persistence.model.User;
 import com.baeldung.persistence.model.UserLocation;
 import com.baeldung.persistence.model.VerificationToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -58,6 +59,7 @@ public class UserService implements IUserService {
     private SessionRegistry sessionRegistry;
 
     @Autowired
+    @Qualifier("GeoIPCountry")
     private DatabaseReader databaseReader;
 
     @Autowired
@@ -65,6 +67,10 @@ public class UserService implements IUserService {
 
     @Autowired
     private NewLocationTokenRepository newLocationTokenRepository;
+
+    @Autowired
+    private 
+      env;
 
     public static final String TOKEN_INVALID = "invalidToken";
     public static final String TOKEN_EXPIRED = "expired";
@@ -241,6 +247,11 @@ public class UserService implements IUserService {
 
     @Override
     public NewLocationToken isNewLoginLocation(String username, String ip) {
+
+        if(!isGeoIpLibEnabled()) {
+            return null;
+        }
+
         try {
             final InetAddress ipAddress = InetAddress.getByName(ip);
             final String country = databaseReader.country(ipAddress)
@@ -273,6 +284,11 @@ public class UserService implements IUserService {
 
     @Override
     public void addUserLocation(User user, String ip) {
+
+        if(!isGeoIpLibEnabled()) {
+            return;
+        }
+
         try {
             final InetAddress ipAddress = InetAddress.getByName(ip);
             final String country = databaseReader.country(ipAddress)
@@ -280,10 +296,14 @@ public class UserService implements IUserService {
                 .getName();
             UserLocation loc = new UserLocation(country, user);
             loc.setEnabled(true);
-            loc = userLocationRepository.save(loc);
+            userLocationRepository.save(loc);
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private boolean isGeoIpLibEnabled() {
+        return Boolean.parseBoolean(env.getProperty("geo.ip.lib.enabled"));
     }
 
     private NewLocationToken createNewLocationToken(String country, User user) {

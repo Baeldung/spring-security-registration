@@ -60,16 +60,16 @@ public class DeviceMetadata {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DeviceMetadata that = (DeviceMetadata) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(userId, that.userId) &&
-                Objects.equals(deviceDetails, that.deviceDetails) &&
-                Objects.equals(location, that.location) &&
-                Objects.equals(lastLoggedIn, that.lastLoggedIn);
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getUserId(), that.getUserId()) &&
+                Objects.equals(getDeviceDetails(), that.getDeviceDetails()) &&
+                Objects.equals(getLocation(), that.getLocation()) &&
+                Objects.equals(getLastLoggedIn(), that.getLastLoggedIn());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, deviceDetails, location, lastLoggedIn);
+        return Objects.hash(getId(), getUserId(), getDeviceDetails(), getLocation(), getLastLoggedIn());
     }
 
     @Override

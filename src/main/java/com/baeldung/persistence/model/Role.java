@@ -73,7 +73,7 @@ public class Role {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + ((getName() == null) ? 0 : getName().hashCode());
         return result;
     }
 
@@ -89,7 +89,7 @@ public class Role {
             return false;
         }
         final Role role = (Role) obj;
-        if (!name.equals(role.name)) {
+        if (!getName().equals(role.getName())) {
             return false;
         }
         return true;

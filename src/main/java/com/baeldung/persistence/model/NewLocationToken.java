@@ -67,9 +67,9 @@ public class NewLocationToken {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = (prime * result) + ((id == null) ? 0 : id.hashCode());
-        result = (prime * result) + ((token == null) ? 0 : token.hashCode());
-        result = (prime * result) + ((userLocation == null) ? 0 : userLocation.hashCode());
+        result = (prime * result) + ((getId() == null) ? 0 : getId().hashCode());
+        result = (prime * result) + ((getToken() == null) ? 0 : getToken().hashCode());
+        result = (prime * result) + ((getUserLocation() == null) ? 0 : getUserLocation().hashCode());
         return result;
     }
 
@@ -85,25 +85,25 @@ public class NewLocationToken {
             return false;
         }
         final NewLocationToken other = (NewLocationToken) obj;
-        if (id == null) {
-            if (other.id != null) {
+        if (getId() == null) {
+            if (other.getId() != null) {
                 return false;
             }
-        } else if (!id.equals(other.id)) {
+        } else if (!getId().equals(other.getId())) {
             return false;
         }
-        if (token == null) {
-            if (other.token != null) {
+        if (getToken() == null) {
+            if (other.getToken() != null) {
                 return false;
             }
-        } else if (!token.equals(other.token)) {
+        } else if (!getToken().equals(other.getToken())) {
             return false;
         }
-        if (userLocation == null) {
-            if (other.userLocation != null) {
+        if (getUserLocation() == null) {
+            if (other.getUserLocation() != null) {
                 return false;
             }
-        } else if (!userLocation.equals(other.userLocation)) {
+        } else if (!getUserLocation().equals(other.getUserLocation())) {
             return false;
         }
         return true;

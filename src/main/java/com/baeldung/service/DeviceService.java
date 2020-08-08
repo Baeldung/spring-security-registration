@@ -7,8 +7,7 @@ import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
 import com.baeldung.persistence.model.DeviceMetadata;
 import com.baeldung.persistence.model.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
@@ -27,7 +26,6 @@ import static java.util.Objects.nonNull;
 
 @Component
 public class DeviceService {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private static final String UNKNOWN = "UNKNOWN";
 
@@ -41,7 +39,7 @@ public class DeviceService {
     private MessageSource messages;
 
     public DeviceService(DeviceMetadataRepository deviceMetadataRepository,
-                         DatabaseReader databaseReader,
+                         @Qualifier("GeoIPCity") DatabaseReader databaseReader,
                          Parser parser,
                          JavaMailSender mailSender,
                          MessageSource messages) {
@@ -157,13 +155,6 @@ public class DeviceService {
         mailSender.send(notification);
     }
 
-    /**
-     * Get the message with a provided locale. If not found, try default {@link Locale#ENGLISH}.
-     *
-     * @param code   Message code
-     * @param locale Request's locale
-     * @return Retrieved message
-     */
     private String getMessage(String code, Locale locale) {
         try {
             return messages.getMessage(code, null, locale);

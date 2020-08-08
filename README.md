@@ -59,3 +59,8 @@ You may also setup an email server locally.  See "email.properties.localhost.sam
 
 ### AuthenticationSuccessHandler configuration for Custom Login Page article
 If you want to activate the configuration for the article [Custom Login Page for Returning User](https://www.baeldung.com/custom-login-page-for-returning-user), then you need to comment the @Component("myAuthenticationSuccessHandler") annotation in the MySimpleUrlAuthenticationSuccessHandler and uncomment the same in MyCustomLoginAuthenticationSuccessHandler.
+
+####Feature toggle for Geo IP Lib
+The geolocation checks do not work for the IP addresses 127.0.0.1 and 0.0.0.0, 
+which can be a problem when running the application locally or in a test environment.
+To disable the check on the geolocation, set the property `geo.ip.lib.enabled` to false;
