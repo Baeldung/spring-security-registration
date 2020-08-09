@@ -17,9 +17,7 @@ public class H2Config extends WebSecurityConfigurerAdapter {
         http
             .csrf().disable()
             .authorizeRequests()
-                .antMatchers("/h2/**").permitAll() // to enable access to H2 db's console                
-             .and()
-               .headers().frameOptions().disable(); // this is needed to access the H2 db's console
+                .antMatchers("/h2/**").permitAll(); // to enable access to H2 db's console                
     // @formatter:on
     }
 }
