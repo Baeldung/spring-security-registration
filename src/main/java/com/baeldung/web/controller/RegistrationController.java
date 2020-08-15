@@ -149,11 +149,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/login")
-    public ModelAndView login(final HttpServletRequest request,
-                                       final ModelMap model,
-                                       @RequestParam("messageKey" ) final Optional<String> messageKey,
-                                       @RequestParam("error" ) final Optional<String> error
-    ) {
+    public ModelAndView login(final HttpServletRequest request, final ModelMap model, @RequestParam("messageKey" ) final Optional<String> messageKey, @RequestParam("error" ) final Optional<String> error) {
         Locale locale = request.getLocale();
         model.addAttribute("lang", locale.getLanguage());
         messageKey.ifPresent( key -> {
