@@ -93,10 +93,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/console")
-    public ModelAndView console(final HttpServletRequest request,
-                                final ModelMap model,
-                                @RequestParam("messageKey") final Optional<String> messageKey
-    ) {
+    public ModelAndView console(final HttpServletRequest request, final ModelMap model, @RequestParam("messageKey") final Optional<String> messageKey) {
 
         Locale locale = request.getLocale();
         messageKey.ifPresent( key -> {
@@ -109,12 +106,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/badUser")
-    public ModelAndView badUser(final HttpServletRequest request,
-                                final ModelMap model,
-                                @RequestParam("messageKey" ) final Optional<String> messageKey,
-                                @RequestParam("expired" ) final Optional<String> expired,
-                                @RequestParam("token" ) final Optional<String> token
-    ) {
+    public ModelAndView badUser(final HttpServletRequest request, final ModelMap model, @RequestParam("messageKey" ) final Optional<String> messageKey, @RequestParam("expired" ) final Optional<String> expired, @RequestParam("token" ) final Optional<String> token) {
 
         Locale locale = request.getLocale();
         messageKey.ifPresent( key -> {
@@ -130,10 +122,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/user/changePassword")
-    public ModelAndView showChangePasswordPage(
-            final ModelMap model,
-            @RequestParam("token") final String token
-    ) {
+    public ModelAndView showChangePasswordPage(final ModelMap model, @RequestParam("token") final String token) {
         final String result = securityUserService.validatePasswordResetToken(token);
 
         if(result != null) {
@@ -147,10 +136,7 @@ public class RegistrationController {
     }
 
     @GetMapping("/updatePassword")
-    public ModelAndView updatePassword(final HttpServletRequest request,
-                                       final ModelMap model,
-                                       @RequestParam("messageKey" ) final Optional<String> messageKey
-    ) {
+    public ModelAndView updatePassword(final HttpServletRequest request, final ModelMap model, @RequestParam("messageKey" ) final Optional<String> messageKey) {
         Locale locale = request.getLocale();
         model.addAttribute("lang", locale.getLanguage());
         messageKey.ifPresent( key -> {
