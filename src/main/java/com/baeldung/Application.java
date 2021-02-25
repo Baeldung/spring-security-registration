@@ -10,7 +10,7 @@ import org.springframework.web.context.request.RequestContextListener;
 public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(Application.class, args);System.out.println("I am updated");
     }
 
     @Bean
