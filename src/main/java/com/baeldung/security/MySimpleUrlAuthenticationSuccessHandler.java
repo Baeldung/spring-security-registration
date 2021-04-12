@@ -80,34 +80,25 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
     }
 
     protected String determineTargetUrl(final Authentication authentication) {
-        boolean isUser = false;
-        boolean isAdmin = false;
-        final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        for (final GrantedAuthority grantedAuthority : authorities) {
-            if (grantedAuthority.getAuthority().equals("READ_PRIVILEGE")) {
-                isUser = true;
-            } else if (grantedAuthority.getAuthority().equals("WRITE_PRIVILEGE")) {
-                isAdmin = true;
-                isUser = false;
-                break;
-            }
-        }
-        if (isUser) {
-        	 String username;
-             if (authentication.getPrincipal() instanceof User) {
-             	username = ((User)authentication.getPrincipal()).getEmail();
-             }
-             else {
-             	username = authentication.getName();
-             }
 
-            return "/homepage.html?user="+username;
-        } else if (isAdmin) {
-            return "/console";
-        } else {
+        UserType userType = UserType.findUserType(authentication.getAuthorities());
+
+        if (userType == null) {
             throw new IllegalStateException();
         }
+
+        String username;
+        if (authentication.getPrincipal() instanceof User) {
+            username = ((User)authentication.getPrincipal()).getEmail();
+        }
+        else {
+            username = authentication.getName();
+        }
+        return userType.getHomePage(username);
     }
+
+
+
 
     protected void clearAuthenticationAttributes(final HttpServletRequest request) {
         final HttpSession session = request.getSession(false);
