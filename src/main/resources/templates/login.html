@@ -56,6 +56,11 @@ label{padding-left:0 !important}
                  <label class="col-sm-4" th:utext="#{label.form.login2fa}">Google Authenticator Verification Code</label>
                  <span class="col-sm-8"><input class="form-control" type='text' name='code' /></span>
                 
+                <div class="clearfix"></div>
+                <br/>
+                <label  th:utext="#{label.form.rememberMe}"> Remember Me</label>
+                <input type="checkbox" name="remember-me" />
+                
                 <br/><br/>
                  <input class="btn btn-primary" name="submit" type="submit" th:value="#{label.form.submit}" />
  
