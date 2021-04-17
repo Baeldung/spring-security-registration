@@ -113,8 +113,19 @@
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
             <scope>test</scope>
+            <exclusions>
+            	<exclusion>
+                	<artifactId>org.codehaus.groovy</artifactId>
+                	<groupId>groovy</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
+		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy</artifactId>
+			<version>${groovy.version}</version>
+		</dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -228,6 +239,7 @@
         <aerogear.version>1.0.0</aerogear.version>
         <uap-java.version>1.4.0</uap-java.version>
         <geoip2.version>2.12.0</geoip2.version>
+        <groovy.version>3.0.7</groovy.version>
 	</properties>
 
 </project>
