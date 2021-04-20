@@ -90,7 +90,7 @@ public class RegistrationController {
         return new ModelAndView("console", model);
     }
 
-    @GetMapping("/manager")
+    @GetMapping("/management")
     public ModelAndView manager(final HttpServletRequest request, final ModelMap model, @RequestParam("messageKey") final Optional<String> messageKey) {
 
         Locale locale = request.getLocale();
@@ -100,7 +100,7 @@ public class RegistrationController {
                 }
         );
 
-        return new ModelAndView("manager", model);
+        return new ModelAndView("management", model);
     }
 
     @GetMapping("/badUser")
