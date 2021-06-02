@@ -1,14 +1,14 @@
 package com.baeldung.service;
 
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-import java.util.Optional;
-
-import com.baeldung.web.dto.UserDto;
+import com.baeldung.persistence.model.NewLocationToken;
 import com.baeldung.persistence.model.PasswordResetToken;
 import com.baeldung.persistence.model.User;
 import com.baeldung.persistence.model.VerificationToken;
-import com.baeldung.persistence.model.NewLocationToken;
+import com.baeldung.web.dto.UserDto;
+
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Optional;
 
 public interface IUserService {
 

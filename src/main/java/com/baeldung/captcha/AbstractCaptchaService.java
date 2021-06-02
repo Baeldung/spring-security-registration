@@ -1,16 +1,14 @@
 package com.baeldung.captcha;
 
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-
+import com.baeldung.web.error.ReCaptchaInvalidException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestOperations;
 
-import com.baeldung.web.error.ReCaptchaInvalidException;
+import javax.servlet.http.HttpServletRequest;
+import java.util.regex.Pattern;
 
 public abstract class AbstractCaptchaService implements ICaptchaService{
     

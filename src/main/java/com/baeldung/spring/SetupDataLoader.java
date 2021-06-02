@@ -1,10 +1,5 @@
 package com.baeldung.spring;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
 import com.baeldung.persistence.dao.PrivilegeRepository;
 import com.baeldung.persistence.dao.RoleRepository;
 import com.baeldung.persistence.dao.UserRepository;
@@ -17,6 +12,11 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {

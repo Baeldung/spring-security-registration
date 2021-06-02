@@ -1,30 +1,10 @@
 package com.baeldung.service;
 
-import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import javax.transaction.Transactional;
-
-import com.baeldung.persistence.dao.NewLocationTokenRepository;
-import com.baeldung.persistence.dao.PasswordResetTokenRepository;
-import com.baeldung.persistence.dao.RoleRepository;
-import com.baeldung.persistence.dao.UserLocationRepository;
-import com.baeldung.persistence.dao.UserRepository;
+import com.baeldung.persistence.dao.*;
+import com.baeldung.persistence.model.*;
 import com.baeldung.web.dto.UserDto;
 import com.baeldung.web.error.UserAlreadyExistException;
-import com.baeldung.persistence.dao.VerificationTokenRepository;
-import com.baeldung.persistence.model.NewLocationToken;
-import com.baeldung.persistence.model.PasswordResetToken;
-import com.baeldung.persistence.model.User;
-import com.baeldung.persistence.model.UserLocation;
-import com.baeldung.persistence.model.VerificationToken;
+import com.maxmind.geoip2.DatabaseReader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.env.Environment;
@@ -35,7 +15,12 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.maxmind.geoip2.DatabaseReader;
+import javax.transaction.Transactional;
+import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.URLEncoder;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional

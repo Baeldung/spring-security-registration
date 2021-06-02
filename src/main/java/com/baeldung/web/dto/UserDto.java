@@ -1,11 +1,11 @@
 package com.baeldung.web.dto;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import com.baeldung.validation.PasswordMatches;
 import com.baeldung.validation.ValidEmail;
 import com.baeldung.validation.ValidPassword;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @PasswordMatches
 public class UserDto {

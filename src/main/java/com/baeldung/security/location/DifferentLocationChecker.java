@@ -1,16 +1,15 @@
 package com.baeldung.security.location;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.baeldung.persistence.model.NewLocationToken;
 import com.baeldung.service.IUserService;
 import com.baeldung.web.error.UnusualLocationException;
-import com.baeldung.security.location.OnDifferentLocationLoginEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Component
 public class DifferentLocationChecker implements UserDetailsChecker {

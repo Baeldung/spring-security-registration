@@ -1,19 +1,9 @@
 package com.baeldung.persistence.model;
 
-import java.util.Collection;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-
 import org.jboss.aerogear.security.otp.api.Base32;
+
+import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "user_account")

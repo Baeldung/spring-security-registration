@@ -1,9 +1,9 @@
 package com.baeldung.security.location;
 
-import java.util.Locale;
-
 import com.baeldung.persistence.model.NewLocationToken;
 import org.springframework.context.ApplicationEvent;
+
+import java.util.Locale;
 
 @SuppressWarnings("serial")
 public class OnDifferentLocationLoginEvent extends ApplicationEvent {

@@ -1,18 +1,12 @@
 package com.baeldung.test;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import com.baeldung.persistence.dao.PrivilegeRepository;
 import com.baeldung.persistence.dao.RoleRepository;
 import com.baeldung.persistence.dao.UserRepository;
-import com.baeldung.spring.TestDbConfig;
 import com.baeldung.persistence.model.Privilege;
 import com.baeldung.persistence.model.Role;
 import com.baeldung.persistence.model.User;
+import com.baeldung.spring.TestDbConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +14,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = TestDbConfig.class)

@@ -1,21 +1,14 @@
 package com.baeldung.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
+import com.baeldung.Application;
 import com.baeldung.persistence.dao.UserRepository;
+import com.baeldung.persistence.model.User;
 import com.baeldung.spring.TestDbConfig;
 import com.baeldung.spring.TestIntegrationConfig;
 import io.restassured.RestAssured;
 import io.restassured.authentication.FormAuthConfig;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import com.baeldung.Application;
-import com.baeldung.persistence.model.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,6 +18,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 @RunWith(SpringRunner.class)

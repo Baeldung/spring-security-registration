@@ -1,9 +1,9 @@
 package com.baeldung.registration;
 
-import java.util.Locale;
-
 import com.baeldung.persistence.model.User;
 import org.springframework.context.ApplicationEvent;
+
+import java.util.Locale;
 
 @SuppressWarnings("serial")
 public class OnRegistrationCompleteEvent extends ApplicationEvent {

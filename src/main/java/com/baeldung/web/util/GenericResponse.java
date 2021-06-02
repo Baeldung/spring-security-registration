@@ -1,10 +1,10 @@
 package com.baeldung.web.util;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GenericResponse {
     private String message;

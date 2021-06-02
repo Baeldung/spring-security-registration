@@ -1,20 +1,11 @@
 package com.baeldung.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import com.baeldung.persistence.dao.RoleRepository;
 import com.baeldung.persistence.dao.UserRepository;
+import com.baeldung.persistence.dao.VerificationTokenRepository;
+import com.baeldung.persistence.model.Role;
+import com.baeldung.persistence.model.User;
+import com.baeldung.persistence.model.VerificationToken;
 import com.baeldung.service.IUserService;
 import com.baeldung.service.UserService;
 import com.baeldung.spring.LoginNotificationConfig;
@@ -24,10 +15,6 @@ import com.baeldung.spring.TestIntegrationConfig;
 import com.baeldung.validation.EmailExistsException;
 import com.baeldung.web.dto.UserDto;
 import com.baeldung.web.error.UserAlreadyExistException;
-import com.baeldung.persistence.dao.VerificationTokenRepository;
-import com.baeldung.persistence.model.Role;
-import com.baeldung.persistence.model.User;
-import com.baeldung.persistence.model.VerificationToken;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +23,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { TestDbConfig.class, ServiceConfig.class, TestIntegrationConfig.class, LoginNotificationConfig.class})

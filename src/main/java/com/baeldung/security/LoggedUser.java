@@ -1,11 +1,10 @@
 package com.baeldung.security;
 
-import java.util.List;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionBindingListener;
-
-import org.springframework.stereotype.Component;
+import java.util.List;
 
 @Component
 public class LoggedUser implements HttpSessionBindingListener {

@@ -1,22 +1,14 @@
 package com.baeldung.test;
 
-import static org.junit.Assert.assertTrue;
-
-import com.maxmind.geoip2.DatabaseReader;
-import java.util.UUID;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import com.baeldung.persistence.dao.UserRepository;
+import com.baeldung.persistence.dao.VerificationTokenRepository;
+import com.baeldung.persistence.model.User;
+import com.baeldung.persistence.model.VerificationToken;
 import com.baeldung.spring.LoginNotificationConfig;
 import com.baeldung.spring.ServiceConfig;
 import com.baeldung.spring.TestDbConfig;
 import com.baeldung.spring.TestIntegrationConfig;
 import com.baeldung.validation.EmailExistsException;
-import com.baeldung.persistence.dao.VerificationTokenRepository;
-import com.baeldung.persistence.model.User;
-import com.baeldung.persistence.model.VerificationToken;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -24,10 +16,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.util.UUID;
+
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { TestDbConfig.class, ServiceConfig.class, TestIntegrationConfig.class, LoginNotificationConfig.class})

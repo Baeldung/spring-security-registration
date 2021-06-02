@@ -1,10 +1,8 @@
 package com.baeldung.registration.listener;
 
-import java.util.UUID;
-
-import com.baeldung.service.IUserService;
 import com.baeldung.persistence.model.User;
 import com.baeldung.registration.OnRegistrationCompleteEvent;
+import com.baeldung.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
@@ -12,6 +10,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
@@ -41,9 +41,10 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
 
         final SimpleMailMessage email = constructEmailMessage(event, user, token);
         mailSender.send(email);
+        System.out.println(email.getText());
     }
 
-    //
+
 
     private SimpleMailMessage constructEmailMessage(final OnRegistrationCompleteEvent event, final User user, final String token) {
         final String recipientAddress = user.getEmail();

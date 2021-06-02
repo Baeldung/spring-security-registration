@@ -1,11 +1,5 @@
 package com.baeldung.security;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import com.baeldung.persistence.dao.UserRepository;
 import com.baeldung.persistence.model.Privilege;
 import com.baeldung.persistence.model.Role;
@@ -18,6 +12,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Service("userDetailsService")
 @Transactional
@@ -67,6 +66,7 @@ public class MyUserDetailsService implements UserDetailsService {
         final List<String> privileges = new ArrayList<>();
         final List<Privilege> collection = new ArrayList<>();
         for (final Role role : roles) {
+            privileges.add(role.getName());
             collection.addAll(role.getPrivileges());
         }
         for (final Privilege item : collection) {

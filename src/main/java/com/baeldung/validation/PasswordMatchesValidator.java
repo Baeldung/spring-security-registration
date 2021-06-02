@@ -1,9 +1,9 @@
 package com.baeldung.validation;
 
+import com.baeldung.web.dto.UserDto;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
-import com.baeldung.web.dto.UserDto;
 
 public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, Object> {
 

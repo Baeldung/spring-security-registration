@@ -1,14 +1,13 @@
 package com.baeldung.captcha;
 
-import java.net.URI;
-
+import com.baeldung.web.error.ReCaptchaInvalidException;
+import com.baeldung.web.error.ReCaptchaUnavailableException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 
-import com.baeldung.web.error.ReCaptchaInvalidException;
-import com.baeldung.web.error.ReCaptchaUnavailableException;
+import java.net.URI;
 
 @Service("captchaServiceV3")
 public class CaptchaServiceV3 extends AbstractCaptchaService {

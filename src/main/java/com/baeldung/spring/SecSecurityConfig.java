@@ -1,18 +1,17 @@
 package com.baeldung.spring;
 
-import java.io.File;
-import java.io.IOException;
-
 import com.baeldung.persistence.dao.UserRepository;
 import com.baeldung.security.CustomRememberMeServices;
 import com.baeldung.security.google2fa.CustomAuthenticationProvider;
 import com.baeldung.security.google2fa.CustomWebAuthenticationDetailsSource;
 import com.baeldung.security.location.DifferentLocationChecker;
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.GeoIp2Exception;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -25,14 +24,15 @@ import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 
-import com.maxmind.geoip2.DatabaseReader;
-import com.maxmind.geoip2.exception.GeoIp2Exception;
+import java.io.File;
+import java.io.IOException;
 
 @ComponentScan(basePackages = { "com.baeldung.security" })
 // @ImportResource({ "classpath:webSecurityConfig.xml" })
@@ -154,6 +154,21 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     public DatabaseReader databaseReader() throws IOException, GeoIp2Exception {
         final File resource = new File("src/main/resources/maxmind/GeoLite2-Country.mmdb");
         return new DatabaseReader.Builder(resource).build();
+    }
+
+    @Bean
+    public RoleHierarchy roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        String hierarchy = "ROLE_ADMIN > ROLE_STAFF \n ROLE_STAFF > ROLE_USER";
+        roleHierarchy.setHierarchy(hierarchy);
+        return roleHierarchy;
+    }
+
+    @Bean
+    public DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
+        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
+        expressionHandler.setRoleHierarchy(roleHierarchy());
+        return expressionHandler;
     }
 
 }

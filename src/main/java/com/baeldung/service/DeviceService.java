@@ -1,12 +1,12 @@
 package com.baeldung.service;
 
 import com.baeldung.persistence.dao.DeviceMetadataRepository;
+import com.baeldung.persistence.model.DeviceMetadata;
+import com.baeldung.persistence.model.User;
 import com.google.common.base.Strings;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CityResponse;
-import com.baeldung.persistence.model.DeviceMetadata;
-import com.baeldung.persistence.model.User;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -20,7 +20,10 @@ import ua_parser.Parser;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import static java.util.Objects.nonNull;
 

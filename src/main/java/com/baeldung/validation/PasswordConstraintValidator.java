@@ -1,23 +1,11 @@
 package com.baeldung.validation;
 
-import java.util.Arrays;
+import com.google.common.base.Joiner;
+import org.passay.*;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-
-import org.passay.AlphabeticalSequenceRule;
-import org.passay.DigitCharacterRule;
-import org.passay.LengthRule;
-import org.passay.NumericalSequenceRule;
-import org.passay.PasswordData;
-import org.passay.PasswordValidator;
-import org.passay.QwertySequenceRule;
-import org.passay.RuleResult;
-import org.passay.SpecialCharacterRule;
-import org.passay.UppercaseCharacterRule;
-import org.passay.WhitespaceRule;
-
-import com.google.common.base.Joiner;
+import java.util.Arrays;
 
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
 

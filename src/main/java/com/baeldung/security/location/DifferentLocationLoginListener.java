@@ -1,7 +1,5 @@
 package com.baeldung.security.location;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
@@ -9,6 +7,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+
+import java.util.Date;
 
 @Component
 public class DifferentLocationLoginListener implements ApplicationListener<OnDifferentLocationLoginEvent> {

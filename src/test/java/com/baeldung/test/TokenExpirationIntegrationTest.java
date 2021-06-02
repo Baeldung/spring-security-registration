@@ -1,26 +1,12 @@
 package com.baeldung.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.Date;
-import java.util.Optional;
-import java.util.UUID;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import com.baeldung.persistence.dao.UserRepository;
-import com.baeldung.spring.TestDbConfig;
-import com.baeldung.spring.TestTaskConfig;
-import com.baeldung.task.TokensPurgeTask;
 import com.baeldung.persistence.dao.VerificationTokenRepository;
 import com.baeldung.persistence.model.User;
 import com.baeldung.persistence.model.VerificationToken;
+import com.baeldung.spring.TestDbConfig;
+import com.baeldung.spring.TestTaskConfig;
+import com.baeldung.task.TokensPurgeTask;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { TestDbConfig.class, TestTaskConfig.class })
