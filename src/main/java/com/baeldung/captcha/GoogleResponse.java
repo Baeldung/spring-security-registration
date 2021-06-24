@@ -35,8 +35,8 @@ public class GoogleResponse {
             errorsMap.put("missing-input-secret", MissingSecret);
             errorsMap.put("invalid-input-secret", InvalidSecret);
             errorsMap.put("missing-input-response", MissingResponse);
-            errorsMap.put("bad-request", InvalidResponse);
-            errorsMap.put("invalid-input-response", BadRequest);
+            errorsMap.put("invalid-input-response", InvalidResponse);
+            errorsMap.put("bad-request", BadRequest);
             errorsMap.put("timeout-or-duplicate", TimeoutOrDuplicate);
         }
 
