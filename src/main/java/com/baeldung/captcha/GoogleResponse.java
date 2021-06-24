@@ -15,7 +15,7 @@ public class GoogleResponse {
     @JsonProperty("success")
     private boolean success;
     @JsonProperty("challenge_ts")
-    private String challengeTs;
+    private String challengeTimeStamp;
     @JsonProperty("hostname")
     private String hostname;
     @JsonProperty("score")
@@ -25,7 +25,7 @@ public class GoogleResponse {
     @JsonProperty("error-codes")
     private ErrorCode[] errorCodes;
 
-    
+
     enum ErrorCode {
         MissingSecret, InvalidSecret, MissingResponse, InvalidResponse, BadRequest, TimeoutOrDuplicate;
 
@@ -57,13 +57,13 @@ public class GoogleResponse {
     }
 
     @JsonProperty("challenge_ts")
-    public String getChallengeTs() {
-        return challengeTs;
+    public String getChallengeTimeStamp() {
+        return challengeTimeStamp;
     }
 
     @JsonProperty("challenge_ts")
-    public void setChallengeTs(String challengeTs) {
-        this.challengeTs = challengeTs;
+    public void setChallengeTimeStamp(String challengeTimeStamp) {
+        this.challengeTimeStamp = challengeTimeStamp;
     }
 
     @JsonProperty("hostname")
@@ -127,6 +127,6 @@ public class GoogleResponse {
 
     @Override
     public String toString() {
-        return "GoogleResponse{" + "success=" + success + ", challengeTs='" + challengeTs + '\'' + ", hostname='" + hostname + '\''+ ", score='" + score + '\''+ ", action='" + action+ '\'' + ", errorCodes=" + Arrays.toString(errorCodes) + '}';
+        return "GoogleResponse{" + "success=" + success + ", challengeTs='" + challengeTimeStamp + '\'' + ", hostname='" + hostname + '\''+ ", score='" + score + '\''+ ", action='" + action+ '\'' + ", errorCodes=" + Arrays.toString(errorCodes) + '}';
     }
 }
