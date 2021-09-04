@@ -70,10 +70,20 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
+    // @Override
+    // protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+    //     auth.authenticationProvider(authProvider());
+    // }
+    /*
+    Edited the above Method
+    */
     @Override
-    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authProvider());
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+        auth.inMemoryAuthentication()
+                .withUser("user@test.com").password(passwordEncoder().encode("123")).roles("USER")
+                .and()
+                .withUser("admin@test.com").password(passwordEncoder().encode("123")).roles("ADMIN");
     }
 
     @Override
