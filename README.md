@@ -35,6 +35,11 @@ mvn clean install
 
 This is a Spring Boot project, so you can deploy it by simply using the main class: `Application.java`
 
+Or run using:
+```
+mvn spring-boot:run
+```
+
 Once deployed, you can access the app at: 
 
 https://localhost:8081
