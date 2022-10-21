@@ -197,6 +197,7 @@ public class OldRegistrationController {
         final Locale locale = request.getLocale();
 
         final User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         userService.changeUserPassword(user, password);
         model.addAttribute("message", messages.getMessage("message.resetPasswordSuc", null, locale));
         return "redirect:/login.html?lang=" + locale;

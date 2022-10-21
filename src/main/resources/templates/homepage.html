@@ -17,8 +17,8 @@
 
     <div class="container">
 	    <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')" th:utext="#{label.pages.user.message}">user</div>
-	
-	    <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')" th:utext="#{label.pages.admin.message}"></div>
+
+	    <div sec:authorize="hasAuthority('CHANGE_PASSWORD_PRIVILEGE')" th:utext="#{label.pages.admin.message}"></div>
 	     
 	    <p th:if="${param.user} != null" th:text="${param.user[0]}">user</p>
 	     
@@ -27,7 +27,7 @@
 	    <a th:href="@{/loggedUsers}" th:utext="#{label.pages.users.message}">View logged in users</a>
 		<br />	    
 	    <a th:href="@{/loggedUsersFromSessionRegistry}" th:utext="#{label.pages.users.sessionregistry.message}">View logged in users</a>
-	    
+        <a class="btn btn-primary" th:href="@{/management}" th:utext="#{label.pages.management}">View Management page</a>
     </div>
 </body>
 </html>

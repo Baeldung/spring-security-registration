@@ -2,6 +2,7 @@ package com.baeldung.security;
 
 import com.baeldung.persistence.model.User;
 import com.baeldung.service.DeviceService;
+import com.baeldung.spring.util.CustomPrivilege;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,19 +81,20 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
     }
 
     protected String determineTargetUrl(final Authentication authentication) {
-        boolean isUser = false;
-        boolean isAdmin = false;
+        boolean isUser;
+        boolean isAdmin;
+        boolean isManager;
         final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        for (final GrantedAuthority grantedAuthority : authorities) {
-            if (grantedAuthority.getAuthority().equals("READ_PRIVILEGE")) {
-                isUser = true;
-            } else if (grantedAuthority.getAuthority().equals("WRITE_PRIVILEGE")) {
-                isAdmin = true;
-                isUser = false;
-                break;
-            }
+        isUser = isAuthorized(authorities, CustomPrivilege.READ);
+        isManager = isAuthorized(authorities, CustomPrivilege.WRITE);
+        if(isManager) {
+            isUser = false;
         }
-        if (isUser) {
+        isAdmin = isAuthorized(authorities, CustomPrivilege.CHANGE_PASSWORD);
+        if(isAdmin) {
+            isManager = false;
+        }
+        if (isUser | isManager) {
         	 String username;
              if (authentication.getPrincipal() instanceof User) {
              	username = ((User)authentication.getPrincipal()).getEmail();
@@ -107,6 +109,15 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
         } else {
             throw new IllegalStateException();
         }
+    }
+
+    private boolean isAuthorized(Collection<? extends GrantedAuthority> authorities, CustomPrivilege privilege) {
+        for (GrantedAuthority authority: authorities) {
+            if(authority.getAuthority().equals(privilege.value())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected void clearAuthenticationAttributes(final HttpServletRequest request) {
