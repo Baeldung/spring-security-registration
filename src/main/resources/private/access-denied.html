@@ -1,0 +1,13 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
+    <title th:utext="#{label.pages.home.title}"></title>
+</head>
+<body>
+<div class="container">
+    <h1 class="alert alert-danger" th:utext="#{message.access.denied}">access denied</h1>
+    <a class="btn btn-primary" th:href="@{/homepage.html}" th:utext="#{label.homepage}">homepage</a>
+</div>
+</body>
+</html>

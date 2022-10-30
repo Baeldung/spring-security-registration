@@ -18,7 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component("myAuthenticationSuccessHandler")
 public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
@@ -80,33 +81,39 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
     }
 
     protected String determineTargetUrl(final Authentication authentication) {
-        boolean isUser = false;
-        boolean isAdmin = false;
-        final Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        for (final GrantedAuthority grantedAuthority : authorities) {
-            if (grantedAuthority.getAuthority().equals("READ_PRIVILEGE")) {
-                isUser = true;
-            } else if (grantedAuthority.getAuthority().equals("WRITE_PRIVILEGE")) {
-                isAdmin = true;
-                isUser = false;
-                break;
-            }
+        switch (getRole(authentication)) {
+            case "ROLE_USER":
+            case "ROLE_MANAGER":
+                String username;
+                if (authentication.getPrincipal() instanceof User) {
+                    username = ((User)authentication.getPrincipal()).getEmail();
+                } else {
+                    username = authentication.getName();
+                }
+                return "/homepage.html?user="+username;
+            case "ROLE_ADMIN":
+                return "/console";
+            default:
+                throw new IllegalStateException();
         }
-        if (isUser) {
-        	 String username;
-             if (authentication.getPrincipal() instanceof User) {
-             	username = ((User)authentication.getPrincipal()).getEmail();
-             }
-             else {
-             	username = authentication.getName();
-             }
+    }
 
-            return "/homepage.html?user="+username;
-        } else if (isAdmin) {
-            return "/console";
-        } else {
-            throw new IllegalStateException();
+    /**
+     * Method that will extract the role from the authorities object and return it.
+     *
+     * @param authentication    authentication object
+     * @return the role for the logged user
+     */
+    private String getRole(Authentication authentication) {
+        final List<String> roles = authentication.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .filter(authority -> authority.startsWith("ROLE_"))
+                .collect(Collectors.toList());
+        if (roles.size() != 1) {
+            throw new IllegalStateException("A user cannot have two roles...");
         }
+        return roles.get(0);
     }
 
     protected void clearAuthenticationAttributes(final HttpServletRequest request) {

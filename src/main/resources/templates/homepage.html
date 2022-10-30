@@ -19,6 +19,11 @@
 	    <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')" th:utext="#{label.pages.user.message}">user</div>
 	
 	    <div sec:authorize="hasAuthority('WRITE_PRIVILEGE')" th:utext="#{label.pages.admin.message}"></div>
+
+        <div sec:authorize="hasAuthority('MANAGEMENT_PRIVILEGE')">
+            This text is only visible to manager user
+            <a class="btn btn-default" th:href="@{/management.html}" th:utext="#{label.pages.manager}">Management</a>
+        </div>
 	     
 	    <p th:if="${param.user} != null" th:text="${param.user[0]}">user</p>
 	     
