@@ -1,5 +1,5 @@
-<html>
-
+<!-- <html> -->
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"/>
 <title th:utext="#{label.pages.home.title}"></title>
@@ -17,9 +17,7 @@
 </nav>
 
 <div class="container">         
-     <p sec:authorize="!hasAuthority('ROLE_ADMIN')" th:utext="#{message.unauth}">unauth</p>
-        
-     <h1 sec:authorize="hasAuthority('ROLE_ADMIN')" th:utext="#{label.pages.admin.message}">admin</h1>
+     <h2 th:utext="#{message.access.denied}">denied</h2>
 </div>
 </body>
 </html>

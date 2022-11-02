@@ -11,6 +11,7 @@ public class RoleHierarchyController {
     public ModelAndView roleHierarcy() {
         ModelAndView model = new ModelAndView();
         model.addObject("adminMessage","Admin content available");
+        model.addObject("managerMessage","Manager content available");
         model.addObject("staffMessage","Staff content available");
         model.addObject("userMessage","User content available");
         model.setViewName("roleHierarchy");

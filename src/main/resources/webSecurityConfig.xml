@@ -8,6 +8,7 @@
 >
 
     <http use-expressions="true">
+        <access-denied-handler error-page="/accessDenied"/>
         <intercept-url pattern="/login*" access="permitAll"/>
         <intercept-url pattern="/logout*" access="permitAll"/>
         <intercept-url pattern="/signin/**" access="permitAll"/>

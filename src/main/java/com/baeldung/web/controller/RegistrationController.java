@@ -89,7 +89,7 @@ public class RegistrationController {
 
         return new ModelAndView("console", model);
     }
-
+    
     @GetMapping("/badUser")
     public ModelAndView badUser(final HttpServletRequest request, final ModelMap model, @RequestParam("messageKey" ) final Optional<String> messageKey, @RequestParam("expired" ) final Optional<String> expired, @RequestParam("token" ) final Optional<String> token) {
 
@@ -159,6 +159,32 @@ public class RegistrationController {
         return "redirect:/login?lang=" + locale.getLanguage();
     }
 
+    @GetMapping("/admin")
+    public ModelAndView admin(final HttpServletRequest request, final ModelMap model, @RequestParam("messageKey") final Optional<String> messageKey) {
+
+        Locale locale = request.getLocale();
+        messageKey.ifPresent( key -> {
+                    String message = messages.getMessage(key, null, locale);
+                    model.addAttribute("message", message);
+                }
+        );
+
+        return new ModelAndView("admin", model);
+    }
+    
+    @GetMapping("/management")
+    public ModelAndView management(final HttpServletRequest request, final ModelMap model, @RequestParam("messageKey") final Optional<String> messageKey) {
+
+        Locale locale = request.getLocale();
+        messageKey.ifPresent( key -> {
+                    String message = messages.getMessage(key, null, locale);
+                    model.addAttribute("message", message);
+                }
+        );
+
+        return new ModelAndView("management", model);
+    }    
+    
     // ============== NON-API ============
 
     public void authWithoutPassword(User user) {
