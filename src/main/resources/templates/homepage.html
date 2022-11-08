@@ -24,6 +24,8 @@
 	     
 	    <a class="btn btn-default" th:href="@{/admin.html}" th:utext="#{label.pages.admin}">admin</a>
 		<br /> <br />
+		<a sec:authorize="hasAuthority('MANAGE_PRIVILEGE')" class="btn btn-default" th:href="@{/management}" th:utext="#{label.pages.management}">management</a>
+		<br /> <br />
 	    <a th:href="@{/loggedUsers}" th:utext="#{label.pages.users.message}">View logged in users</a>
 		<br />	    
 	    <a th:href="@{/loggedUsersFromSessionRegistry}" th:utext="#{label.pages.users.sessionregistry.message}">View logged in users</a>

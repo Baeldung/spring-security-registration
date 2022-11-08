@@ -99,7 +99,7 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
                 break;
             }
         }
-        if (isUser) {
+        if (isUser || isManager) {
         	 String username;
              if (authentication.getPrincipal() instanceof User) {
              	username = ((User)authentication.getPrincipal()).getEmail();
@@ -111,9 +111,7 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
             return "/homepage.html?user="+username;
         } else if (isAdmin) {
             return "/console";
-        } else if (isManager) {
-            return "/management";
-        }else {
+        } else {
             throw new IllegalStateException();
         }
     }
