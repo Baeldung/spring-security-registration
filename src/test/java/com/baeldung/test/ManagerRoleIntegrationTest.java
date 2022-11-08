@@ -119,6 +119,6 @@ public class ManagerRoleIntegrationTest {
         params.put("password", "test");
 
         final Response response = request.with().params(params).get("/management");
-        assertEquals(302, response.statusCode());
+        assertEquals(403, response.statusCode()); // Access Denied HTTP Status
 	}
 }
