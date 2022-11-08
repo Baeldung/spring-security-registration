@@ -1,12 +1,8 @@
 package com.baeldung.spring;
 
-import com.baeldung.persistence.dao.UserRepository;
-import com.baeldung.security.CustomRememberMeServices;
-import com.baeldung.security.google2fa.CustomAuthenticationProvider;
-import com.baeldung.security.google2fa.CustomWebAuthenticationDetailsSource;
-import com.baeldung.security.location.DifferentLocationChecker;
-import com.maxmind.geoip2.DatabaseReader;
-import com.maxmind.geoip2.exception.GeoIp2Exception;
+import java.io.File;
+import java.io.IOException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -32,8 +28,12 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
-import java.io.File;
-import java.io.IOException;
+import com.baeldung.security.CustomRememberMeServices;
+import com.baeldung.security.google2fa.CustomAuthenticationProvider;
+import com.baeldung.security.google2fa.CustomWebAuthenticationDetailsSource;
+import com.baeldung.security.location.DifferentLocationChecker;
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.GeoIp2Exception;
 
 @ComponentScan(basePackages = { "com.baeldung.security" })
 // @ImportResource({ "classpath:webSecurityConfig.xml" })
@@ -54,9 +54,6 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private CustomWebAuthenticationDetailsSource authenticationDetailsSource;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Autowired
     private DifferentLocationChecker differentLocationChecker;

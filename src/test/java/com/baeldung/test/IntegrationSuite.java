@@ -14,7 +14,8 @@ import org.junit.runner.RunWith;
     UserServiceIntegrationTest.class,
     UserIntegrationTest.class,
     SpringSecurityRolesIntegrationTest.class,
-    LocalizationIntegrationTest.class
+    LocalizationIntegrationTest.class,
+    ManagerRoleIntegrationTest.class
 })// @formatter:on
 public class IntegrationSuite {
   //

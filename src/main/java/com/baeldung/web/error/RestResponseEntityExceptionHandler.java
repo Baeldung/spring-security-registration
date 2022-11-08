@@ -1,18 +1,25 @@
 package com.baeldung.web.error;
 
+import com.baeldung.persistence.model.User;
 import com.baeldung.web.util.GenericResponse;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailAuthenticationException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
@@ -87,6 +94,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         logger.error("500 Status Code", ex);
         final GenericResponse bodyOfResponse = new GenericResponse(messages.getMessage("message.unavailableReCaptcha", null, request.getLocale()), "InvalidReCaptcha");
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+    }
+    
+    @ExceptionHandler({ AccessDeniedException.class })
+    public ModelAndView handleAccessDenied(final RuntimeException ex, final WebRequest request, final HttpServletRequest httpRequest) {
+    	final User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        logger.warn("User "+ user.getFirstName() +" attempted to access unauthorized URL "+ httpRequest.getRequestURI());
+        return new ModelAndView("accessDenied");
     }
 
     @ExceptionHandler({ Exception.class })

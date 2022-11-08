@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.baeldung.util.AppConstants.*;
+
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -45,18 +47,23 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         }
 
         // == create initial privileges
-        final Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
-        final Privilege writePrivilege = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
-        final Privilege passwordPrivilege = createPrivilegeIfNotFound("CHANGE_PASSWORD_PRIVILEGE");
+        final Privilege readPrivilege = createPrivilegeIfNotFound(READ_PRIVILEGE);
+        final Privilege writePrivilege = createPrivilegeIfNotFound(WRITE_PRIVILEGE);
+        final Privilege managePrivilege = createPrivilegeIfNotFound(MANAGE_PRIVILEGE);
+        final Privilege passwordPrivilege = createPrivilegeIfNotFound(CHANGE_PASSWORD_PRIVILEGE);
 
         // == create initial roles
         final List<Privilege> adminPrivileges = new ArrayList<>(Arrays.asList(readPrivilege, writePrivilege, passwordPrivilege));
+        final List<Privilege> managerPrivileges = new ArrayList<>(Arrays.asList(readPrivilege, writePrivilege, managePrivilege, passwordPrivilege));
         final List<Privilege> userPrivileges = new ArrayList<>(Arrays.asList(readPrivilege, passwordPrivilege));
-        final Role adminRole = createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-        createRoleIfNotFound("ROLE_USER", userPrivileges);
+        final Role adminRole = createRoleIfNotFound(ROLE_ADMIN, adminPrivileges);
+        final Role managerRole = createRoleIfNotFound(ROLE_MANAGER, managerPrivileges);
+        final Role userRole = createRoleIfNotFound(ROLE_USER, userPrivileges);
 
         // == create initial user
-        createUserIfNotFound("test@test.com", "Test", "Test", "test", new ArrayList<>(Arrays.asList(adminRole)));
+        createUserIfNotFound("admin@test.com", "Admin", "Test", "a", new ArrayList<>(Arrays.asList(adminRole)));
+        createUserIfNotFound("manager@test.com", "Manager", "Test", "m", new ArrayList<>(Arrays.asList(managerRole)));
+        createUserIfNotFound("user@test.com", "User", "Test", "u", new ArrayList<>(Arrays.asList(userRole)));
 
         alreadySetup = true;
     }
