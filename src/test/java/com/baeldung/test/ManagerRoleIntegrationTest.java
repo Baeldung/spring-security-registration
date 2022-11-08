@@ -2,12 +2,16 @@ package com.baeldung.test;
 
 import static com.baeldung.util.AppConstants.MANAGE_PRIVILEGE;
 import static com.baeldung.util.AppConstants.ROLE_MANAGER;
+import static com.baeldung.util.AppConstants.READ_PRIVILEGE;
+import static com.baeldung.util.AppConstants.ROLE_USER;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,91 +38,37 @@ import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = { Application.class, TestDbConfig.class, TestIntegrationConfig.class }, webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = { Application.class, TestDbConfig.class,
+		TestIntegrationConfig.class }, webEnvironment = WebEnvironment.RANDOM_PORT)
 public class ManagerRoleIntegrationTest {
 
-	@Autowired
-    private UserRepository userRepository;
+	@Value("${local.server.port}")
+	int port;
 
-    @Autowired
-    private RoleRepository roleRepository;
+	private FormAuthConfig formConfig;
 
-    @Autowired
-    private PrivilegeRepository privilegeRepository;
+	@BeforeEach
+	public void init() {
+		RestAssured.port = port;
+		RestAssured.baseURI = "http://localhost";
+		formConfig = new FormAuthConfig("/login", "username", "password");
+	}
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    
-    @Value("${local.server.port}")
-    int port;
-
-    private User user;
-    private Role role;
-    private Privilege privilege;
-    private FormAuthConfig formConfig;
-    
-    @BeforeEach
-    public void init() {
-        RestAssured.port = port;
-        RestAssured.baseURI = "http://localhost";
-        formConfig = new FormAuthConfig("/login", "username", "password");
-    }
-	
 	@Test
 	public void testManagementUrlByManagerUser() {
-		
-		// Create user with managerial role and privileges
-		privilege = new Privilege(MANAGE_PRIVILEGE);
-        privilegeRepository.save(privilege);
 
-        role = new Role(ROLE_MANAGER);
-        role.setPrivileges(Arrays.asList(privilege));
-        roleRepository.save(role);
+		final RequestSpecification request = RestAssured.given().auth().form("manager@test.com", "m", formConfig);
 
-        user = new User();
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setPassword(passwordEncoder.encode("123"));
-        user.setEmail("john@doe.com");
-        user.setRoles(Arrays.asList(role));
-        user.setEnabled(true);
-        userRepository.save(user);
-        
-        final RequestSpecification request = RestAssured.given().auth().form("john@doe.com", "123", formConfig);
-
-        final Map<String, String> params = new HashMap<>();
-        params.put("password", "test");
-
-        final Response response = request.with().params(params).get("/management");
-        assertEquals(200, response.statusCode());
+		final Response response = request.with().log().all().get("/management");
+		assertEquals(200, response.statusCode());
+		assertTrue(response.body().asString().contains("Management Home"));
 	}
-	
+
 	@Test
 	public void testManagementUrlByNonManagerUser() {
-		
-		// Create user with managerial role and privileges
-		privilege = new Privilege("TEST_PRIVILEGE");
-        privilegeRepository.save(privilege);
-
-        role = new Role("TEST_ROLE");
-        role.setPrivileges(Arrays.asList(privilege));
-        roleRepository.save(role);
-
-        user = new User();
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setPassword(passwordEncoder.encode("123"));
-        user.setEmail("john@doe.com");
-        user.setRoles(Arrays.asList(role));
-        user.setEnabled(true);
-        userRepository.save(user);
-        
-        final RequestSpecification request = RestAssured.given().auth().form("john@doe.com", "123", formConfig);
-
-        final Map<String, String> params = new HashMap<>();
-        params.put("password", "test");
-
-        final Response response = request.with().params(params).get("/management");
-        assertEquals(403, response.statusCode()); // Access Denied HTTP Status
+		final RequestSpecification request = RestAssured.given().auth().form("user@test.com", "u", formConfig);
+		final Response response = request.with().log().all().get("/management");
+		assertEquals(200, response.statusCode());
+		assertTrue(response.body().asString().contains("Access denied, please go back to home page"));
 	}
 }
