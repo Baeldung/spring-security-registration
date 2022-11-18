@@ -1,5 +1,12 @@
 package com.baeldung.spring;
 
+import com.baeldung.persistence.dao.UserRepository;
+import com.baeldung.security.CustomRememberMeServices;
+import com.baeldung.security.google2fa.CustomAuthenticationProvider;
+import com.baeldung.security.google2fa.CustomWebAuthenticationDetailsSource;
+import com.baeldung.security.location.DifferentLocationChecker;
+import com.maxmind.geoip2.DatabaseReader;
+import com.maxmind.geoip2.exception.GeoIp2Exception;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,7 +20,9 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -23,11 +32,8 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
-import com.baeldung.persistence.dao.UserRepository;
-import com.baeldung.security.CustomRememberMeServices;
-import com.baeldung.security.google2fa.CustomAuthenticationProvider;
-import com.baeldung.security.google2fa.CustomWebAuthenticationDetailsSource;
-import com.baeldung.security.location.DifferentLocationChecker;
+import java.io.File;
+import java.io.IOException;
 
 @ComponentScan(basePackages = { "com.baeldung.security" })
 // @ImportResource({ "classpath:webSecurityConfig.xml" })
@@ -51,15 +57,6 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private DifferentLocationChecker differentLocationChecker;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private SessionRegistry sessionRegistry;
 
     public SecSecurityConfig() {
         super();
@@ -109,7 +106,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .sessionManagement()
                 .invalidSessionUrl("/invalidSession.html")
-                .maximumSessions(1).sessionRegistry(sessionRegistry).and()
+                .maximumSessions(1).sessionRegistry(sessionRegistry()).and()
                 .sessionFixation().none()
             .and()
             .logout()
@@ -130,15 +127,31 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     public DaoAuthenticationProvider authProvider() {
         final CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
-        authProvider.setPasswordEncoder(passwordEncoder);
-        authProvider.setPostAuthenticationChecks(differentLocationChecker);
+        authProvider.setPasswordEncoder(encoder());
+        authProvider.setPostAuthenticationChecks(differentLocationChecker());
         return authProvider;
+    }
+
+    @Bean
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder(11);
+    }
+
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
     }
 
     @Bean
     public RememberMeServices rememberMeServices() {
         CustomRememberMeServices rememberMeServices = new CustomRememberMeServices("theKey", userDetailsService, new InMemoryTokenRepositoryImpl());
         return rememberMeServices;
+    }
+
+    @Bean(name="GeoIPCountry")
+    public DatabaseReader databaseReader() throws IOException, GeoIp2Exception {
+        final File resource = new File("src/main/resources/maxmind/GeoLite2-Country.mmdb");
+        return new DatabaseReader.Builder(resource).build();
     }
 
     @Bean
@@ -159,5 +172,10 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
+    }
+
+    @Bean
+    public DifferentLocationChecker differentLocationChecker() {
+        return new DifferentLocationChecker();
     }
 }
