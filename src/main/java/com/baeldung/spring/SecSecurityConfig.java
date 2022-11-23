@@ -58,9 +58,6 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private DifferentLocationChecker differentLocationChecker;
-
     public SecSecurityConfig() {
         super();
     }
@@ -131,7 +128,7 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
         final CustomAuthenticationProvider authProvider = new CustomAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(encoder());
-        authProvider.setPostAuthenticationChecks(differentLocationChecker);
+        authProvider.setPostAuthenticationChecks(differentLocationChecker());
         return authProvider;
     }
 
@@ -175,5 +172,10 @@ public class SecSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
+    }
+
+    @Bean
+    public DifferentLocationChecker differentLocationChecker() {
+        return new DifferentLocationChecker();
     }
 }
