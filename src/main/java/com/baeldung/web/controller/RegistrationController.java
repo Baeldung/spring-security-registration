@@ -184,7 +184,7 @@ public class RegistrationController {
 
     private final String getClientIP(HttpServletRequest request) {
         final String xfHeader = request.getHeader("X-Forwarded-For");
-        if (xfHeader == null) {
+        if (xfHeader == null || xfHeader.isEmpty() || !xfHeader.contains(request.getRemoteAddr())) {
             return request.getRemoteAddr();
         }
         return xfHeader.split(",")[0];
