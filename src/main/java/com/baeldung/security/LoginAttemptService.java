@@ -25,14 +25,8 @@ public class LoginAttemptService {
         });
     }
 
-    //
-
-    public void loginSucceeded(final String key) {
-        attemptsCache.invalidate(key);
-    }
-
     public void loginFailed(final String key) {
-        int attempts = 0;
+        int attempts;
         try {
             attempts = attemptsCache.get(key);
         } catch (final ExecutionException e) {
