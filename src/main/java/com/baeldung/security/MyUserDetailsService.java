@@ -28,9 +28,6 @@ public class MyUserDetailsService implements UserDetailsService {
     @Autowired
     private LoginAttemptService loginAttemptService;
 
-    @Autowired
-    private HttpServletRequest request;
-
     public MyUserDetailsService() {
         super();
     }
@@ -39,8 +36,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(final String email) throws UsernameNotFoundException {
-        final String ip = getClientIP();
-        if (loginAttemptService.isBlocked(ip)) {
+        if (loginAttemptService.isBlocked()) {
             throw new RuntimeException("blocked");
         }
 
@@ -82,14 +78,6 @@ public class MyUserDetailsService implements UserDetailsService {
             authorities.add(new SimpleGrantedAuthority(privilege));
         }
         return authorities;
-    }
-
-    private String getClientIP() {
-        final String xfHeader = request.getHeader("X-Forwarded-For");
-        if (xfHeader != null) {
-            return xfHeader.split(",")[0];
-        }
-        return request.getRemoteAddr();
     }
 
 }
