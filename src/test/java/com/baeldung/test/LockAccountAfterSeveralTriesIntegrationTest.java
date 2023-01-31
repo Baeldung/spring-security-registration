@@ -25,12 +25,10 @@ import io.restassured.specification.RequestSpecification;
 
 /**
  * Test class for the case to see that the user is blocked after several tries
- *
- * @author iulian.timis
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = { Application.class, TestDbConfig.class, TestIntegrationConfig.class }, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class TestLockAccountAfterSeveralTries {
+public class LockAccountAfterSeveralTriesIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
