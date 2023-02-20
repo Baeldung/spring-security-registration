@@ -118,7 +118,13 @@ public class UserLocation {
 
     @Override
     public String toString() {
-        return "UserLocation [id=" + id + ", country=" + country + ", enabled=" + enabled + ", user=" + user + "]";
+        final StringBuilder builder = new StringBuilder("UserLocation [");
+        builder.append("id=").append(id);
+        builder.append(", country=").append(country);
+        builder.append(", enabled=").append(enabled);
+        builder.append(", user=").append(user);
+        builder.append("]");
+        return builder.toString();
     }
 
 }

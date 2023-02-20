@@ -111,7 +111,11 @@ public class NewLocationToken {
 
     @Override
     public String toString() {
-        return "NewLocationToken [id=" + id + ", token=" + token + ", userLocation=" + userLocation + "]";
-    }
+        final StringBuilder builder = new StringBuilder("NewLocationToken [");
+        builder.append("id=").append(id);
+        builder.append(", token=").append(token);
+        builder.append(", userLocation=").append(userLocation);
+        builder.append("]");
+        return builder.toString();    }
 
 }
