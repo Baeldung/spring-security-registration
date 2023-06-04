@@ -6,7 +6,7 @@ import com.baeldung.security.google2fa.CustomAuthenticationProvider;
 import com.baeldung.security.google2fa.CustomWebAuthenticationDetailsSource;
 import com.baeldung.security.location.DifferentLocationChecker;
 import com.maxmind.geoip2.DatabaseReader;
-import com.maxmind.geoip2.exception.GeoIp2Exception;
+import org.springframework.beans.factory.UnsatisfiedDependencyException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -35,6 +35,7 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 @ComponentScan(basePackages = { "com.baeldung.security" })
 // @ImportResource({ "classpath:webSecurityConfig.xml" })
@@ -149,8 +150,12 @@ public class SecSecurityConfig {
     }
 
     @Bean(name="GeoIPCountry")
-    public DatabaseReader databaseReader() throws IOException, GeoIp2Exception {
-        final File resource = new File(this.getClass().getClassLoader().getResource("maxmind/GeoLite2-Country.mmdb").getFile());
+    public DatabaseReader databaseReader() throws IOException {
+        URL geoDataSrouceURL = this.getClass().getClassLoader().getResource("maxmind/GeoLite2-Countrya.mmdb");
+        if (geoDataSrouceURL == null) {
+            throw new UnsatisfiedDependencyException(null, "GeoIPCountry", "GeoLite2-Country.mmdb", "not found");
+        }
+        final File resource = new File(geoDataSrouceURL.getFile());
         return new DatabaseReader.Builder(resource).build();
     }
 
