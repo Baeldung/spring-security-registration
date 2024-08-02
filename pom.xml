@@ -56,25 +56,17 @@
 
 		<!-- Servlet -->
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>${javax.servlet-api.version}</version>
+			<groupId>jakarta.servlet</groupId>
+			<artifactId>jakarta.servlet-api</artifactId>
+			<version>${jakarta.servlet-api.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>jstl</artifactId>
-			<version>${jstl.version}</version>
+			<groupId>jakarta.el</groupId>
+			<artifactId>jakarta.el-api</artifactId>
+			<version>${jakarta.el.version}</version>
 		</dependency>
 
-
-
-        <dependency>
-            <groupId>javax.el</groupId>
-            <artifactId>el-api</artifactId>
-            <version>${javax.el.version}</version>
-        </dependency>
-        
 		<!-- Password Validation -->
 		<dependency>
 			<groupId>org.passay</groupId>
@@ -239,9 +231,8 @@
 
 	<properties>
 		<java-version>17</java-version>
-        <javax.el.version>2.2</javax.el.version>
-		<jstl.version>1.2</jstl.version>
-		<javax.servlet-api.version>4.0.1</javax.servlet-api.version>
+        <jakarta.el.version>6.0.1</jakarta.el.version>
+		<jakarta.servlet-api.version>6.1.0</jakarta.servlet-api.version>
 		<mysql-connector-java.version>8.0.32</mysql-connector-java.version>
 		<guava.version>32.0.0-jre</guava.version>
 		<passay.version>1.0</passay.version>
